@@ -1,335 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Pura Candela - Presupuestos</title>
-    <style>
-        :root {
-            --primary: #d4a574; /* beige cálido */
-            --secondary: #5e454b; /* terracota oscuro */
-            --light: #f8f4f0;
-            --dark: #333;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body {
-            background-color: var(--light);
-            color: var(--dark);
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            border-bottom: 2px solid var(--primary);
-        }
-        h1 {
-            color: var(--secondary);
-            font-size: 2rem;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        select, input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover { background-color: #c29565; }
-        #resultado {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            display: none;
-        }
-        .presupuesto-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .total {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--secondary);
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #ccc;
-        }
-        .save-button {
-            background-color: var(--secondary);
-        }
-        .save-button:hover {
-            background-color: #4a3338;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pura Candela - Inicio</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <header>
-        <h1>✨ Pura Candela</h1>
-        <p>Generá tu presupuesto en segundos</p>
-    </header>
+  <main>
+    <!-- Recepción -->
+    <section class="hero">
+      <div class="content">
+        <h1>Pura Candela</h1>
+        <p>Artesanía en velas con alma y aroma</p>
+      </div>
+    </section>
 
-    <div class="form-group">
-        <label for="producto">Producto</label>
-        <select id="producto"></select>
-    </div>
+    <!-- Quiénes Somos -->
+    <section class="section">
+      <div class="container">
+        <img src="./img/quienes-somos.jpg" alt="Quiénes somos" />
+        <div class="text">
+          <h2>Quiénes Somos</h2>
+          <p>Somos un emprendimiento familiar dedicado a crear velas artesanales con ingredientes naturales...</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="form-group">
-        <label for="cantidad">Cantidad</label>
-        <input type="number" id="cantidad" min="1" value="1" />
-    </div>
+    <!-- Misión -->
+    <section class="section">
+      <div class="container reverse">
+        <img src="./img/mision.jpg" alt="Misión" />
+        <div class="text">
+          <h2>Misión</h2>
+          <p>Ofrecer productos únicos que combinen calidad, aroma y bienestar...</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="form-group">
-        <label for="margen">Margen de ganancia (%)</label>
-        <input type="number" id="margen" min="0" placeholder="Ej: 100" />
-    </div>
-
-    <button onclick="calcularPresupuesto()">Calcular presupuesto</button>
-
-    <div id="resultado"></div>
-
-    <script>
-        // === CONFIGURACIÓN DE ESCRITURA (API) ===
-        // 📢 ¡IMPORTANTE! Reemplace con la URL de su API 'puracandela_api'
-        const APPS_SCRIPT_URL = 'SU_URL_DE_LA_API_DE_APPS_SCRIPT_AQUI'; 
-
-        // === CONFIGURACIÓN DE LECTURA (GViz) ===
-        const SHEET_ID = "1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc";
-        const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?`;
-
-        // === DATOS GLOBALES ===
-        let productos = [];
-        let insumos = {};
-        let margenes = {};
-        let presupuestoActual = null; // Almacenará los datos del último presupuesto
-
-        // ---------------------------------------------------------------------
-        // --- FUNCIONES DE LECTURA (GViz) ---
-        // ---------------------------------------------------------------------
-
-        async function cargarDatos() {
-            try {
-                // Cargar insumos (Hoja "insumos", gid=792118100)
-                const resInsumos = await fetch(`${BASE_URL}tq=SELECT%20A%2CB%2CC%20WHERE%20A%20IS%20NOT%20NULL&gid=792118100`);
-                const txtInsumos = await resInsumos.text();
-                const jsonInsumos = JSON.parse(txtInsumos.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
-                insumos = {};
-                jsonInsumos.table.rows.forEach(row => {
-                    // Asumiendo que la columna B es el nombre del insumo y C es el costo
-                    const tipo = row.c[1].v; // Usar Columna B (Tipo) para la clave
-                    const costo = parseFloat(row.c[2].v);
-                    insumos[tipo] = costo;
-                });
-                
-                // Cargar márgenes (Hoja "margenes_predeterminados", gid=444473679)
-                const resMargenes = await fetch(`${BASE_URL}tq=SELECT%20A%2CB%20WHERE%20A%20IS%20NOT%20NULL&gid=444473679`);
-                const txtMargenes = await resMargenes.text();
-                const jsonMargenes = JSON.parse(txtMargenes.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
-                margenes = {};
-                jsonMargenes.table.rows.forEach(row => {
-                    const tipo = row.c[0].v;
-                    const margen = parseFloat(row.c[1].v);
-                    margenes[tipo] = margen;
-                });
-
-                // Cargar productos (Hoja "productos", gid=1442886688)
-                const resProductos = await fetch(`${BASE_URL}tq=SELECT%20B%2CC%2CD%2CE%2CF%2CG%2CH%2CI%2CJ%2CK%2CL%20WHERE%20A%20IS%20NOT%20NULL&gid=1442886688`);
-                const txtProductos = await resProductos.text();
-                const jsonProductos = JSON.parse(txtProductos.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
-                
-                // Mapeo de columnas (revisar el query SELECT A..L)
-                productos = jsonProductos.table.rows.map(row => ({
-                    nombre: row.c[0] ? row.c[0].v : '', // Col B
-                    tipo: row.c[1] ? row.c[1].v : '',   // Col C
-                    envase: parseFloat(row.c[2] ? row.c[2].v : 0) || 0, // Col D
-                    cera: parseFloat(row.c[3] ? row.c[3].v : 0) || 0,   // Col E
-                    mejorador: parseFloat(row.c[4] ? row.c[4].v : 0) || 0, // Col F
-                    esencia: parseFloat(row.c[5] ? row.c[5].v : 0) || 0,   // Col G
-                    pabilo: parseFloat(row.c[6] ? row.c[6].v : 0) || 0,    // Col H
-                    ojalillo: parseFloat(row.c[7] ? row.c[7].v : 0) || 0,  // Col I
-                    pegamento: parseFloat(row.c[8] ? row.c[8].v : 0) || 0, // Col J
-                    glicerina: parseFloat(row.c[9] ? row.c[9].v : 0) || 0, // Col K
-                    alcohol: parseFloat(row.c[10] ? row.c[10].v : 0) || 0, // Col L
-                }));
-
-                // Llenar select y configurar el listener
-                const select = document.getElementById("producto");
-                productos.forEach(p => {
-                    const opt = document.createElement("option");
-                    opt.value = p.nombre;
-                    opt.textContent = p.nombre;
-                    select.appendChild(opt);
-                });
-
-                select.addEventListener("change", () => {
-                    const prod = productos.find(p => p.nombre === select.value);
-                    if (prod && margenes[prod.tipo] !== undefined) {
-                        document.getElementById("margen").value = margenes[prod.tipo];
-                    } else {
-                        document.getElementById("margen").value = "";
-                    }
-                    // Ocultar resultado al cambiar producto
-                    document.getElementById("resultado").style.display = "none";
-                });
-
-                if (productos.length > 0) {
-                    select.dispatchEvent(new Event("change"));
-                }
-
-            } catch (e) {
-                console.error("Error al cargar datos:", e);
-                alert("⚠️ No se pudieron cargar los datos. Verifique la conexión a Internet y que la hoja esté configurada para acceso público (archivo/compartir/publicar en la web).");
-            }
-        }
-
-        // ---------------------------------------------------------------------
-        // --- FUNCIÓN DE CÁLCULO Y ESCRITURA ---
-        // ---------------------------------------------------------------------
-
-        function calcularPresupuesto() {
-            const nombre = document.getElementById("producto").value;
-            const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
-            let margenInput = document.getElementById("margen").value;
-            const margen = margenInput !== "" ? parseFloat(margenInput) : 0;
-
-            const prod = productos.find(p => p.nombre === nombre);
-            if (!prod) {
-                alert("Producto no encontrado");
-                return;
-            }
-
-            // Mapeo de insumos para el cálculo (asegúrese de que los nombres coincidan con la Col B de 'insumos')
-            let costoInsumos = 0;
-            if (prod.cera > 0) costoInsumos += prod.cera * (insumos['cera de soja'] || 0);
-            if (prod.mejorador > 0) costoInsumos += prod.mejorador * (insumos.mejorador || 0);
-            if (prod.esencia > 0) costoInsumos += prod.esencia * (insumos.esencia || 0);
-            if (prod.pabilo > 0) costoInsumos += prod.pabilo * (insumos.pabilo || 0);
-            if (prod.ojalillo > 0) costoInsumos += prod.ojalillo * (insumos.ojalillo || 0);
-            if (prod.pegamento > 0) costoInsumos += prod.pegamento * (insumos.pegamento || 0);
-            if (prod.glicerina > 0) costoInsumos += prod.glicerina * (insumos.glicerina || 0);
-            if (prod.alcohol > 0) costoInsumos += prod.alcohol * (insumos['alcohol de cereal'] || 0); // Ajuste nombre si es necesario
-
-            const costoInsumosTotal = costoInsumos;
-            const costoTotalUnitario = prod.envase + costoInsumosTotal;
-            const gananciaUnitario = costoTotalUnitario * (margen / 100);
-            const precioVentaUnitario = costoTotalUnitario + gananciaUnitario;
-            const totalVenta = precioVentaUnitario * cantidad;
-            const gananciaTotal = gananciaUnitario * cantidad;
-
-
-            // Guardar datos temporales para la función de guardar
-            presupuestoActual = {
-                sheetName: "presupuestos", // Deberá crear una hoja llamada 'presupuestos'
-                nombre: prod.nombre,
-                tipo: prod.tipo,
-                cantidad: cantidad,
-                costoUnitario: costoTotalUnitario,
-                margen: margen,
-                gananciaUnitario: gananciaUnitario,
-                precioUnitario: precioVentaUnitario,
-                total: totalVenta
-            };
-
-            // Mostrar resultado con botón de guardar
-            const resultadoDiv = document.getElementById("resultado");
-            resultadoDiv.innerHTML = `
-                <div class="presupuesto-item"><span>Producto:</span><strong>${presupuestoActual.nombre}</strong></div>
-                <div class="presupuesto-item"><span>Cantidad:</span><strong>${presupuestoActual.cantidad}</strong></div>
-                <div class="presupuesto-item"><span>Costo unitario:</span><strong>$${presupuestoActual.costoUnitario.toFixed(2)}</strong></div>
-                <div class="presupuesto-item"><span>Ganancia unitaria:</span><strong>$${presupuestoActual.gananciaUnitario.toFixed(2)} (${presupuestoActual.margen}%)</strong></div>
-                <div class="presupuesto-item"><span>Precio unitario:</span><strong>$${presupuestoActual.precioUnitario.toFixed(2)}</strong></div>
-                <div class="total">TOTAL DE VENTA: $${presupuestoActual.total.toFixed(2)}</div>
-                <button class="save-button" onclick="guardarPresupuesto()">Guardar Presupuesto</button>
-            `;
-            resultadoDiv.style.display = "block";
-        }
-
-
-        /**
-         * Función para guardar el último presupuesto calculado en Google Sheets.
-         * Se requiere una hoja llamada "presupuestos" con las columnas adecuadas.
-         */
-        async function guardarPresupuesto() {
-            if (!presupuestoActual) {
-                alert("Primero debes calcular un presupuesto.");
-                return;
-            }
-
-            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'SU_URL_DE_LA_API_DE_APPS_SCRIPT_AQUI') {
-                 alert("¡Error de configuración! Reemplace APPS_SCRIPT_URL con su URL de Google Apps Script.");
-                 return;
-            }
-
-            // Datos a enviar (Ajuste el orden y los datos si su hoja 'presupuestos' tiene otras columnas)
-            const nuevaFila = [
-                new Date().toLocaleString('es-AR'), // Fecha y Hora
-                presupuestoActual.nombre,
-                presupuestoActual.tipo,
-                presupuestoActual.cantidad,
-                presupuestoActual.costoUnitario,
-                presupuestoActual.margen,
-                presupuestoActual.gananciaUnitario,
-                presupuestoActual.precioUnitario,
-                presupuestoActual.total
-            ];
-            
-            const payload = {
-                sheetName: "presupuestos", // <--- Hoja de destino. ¡CREALA EN TU ARCHIVO!
-                newRow: nuevaFila
-            };
-
-            // Deshabilitar botón de guardar para evitar envíos dobles
-            const saveBtn = document.querySelector('.save-button');
-            saveBtn.textContent = 'Guardando...';
-            saveBtn.disabled = true;
-
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                const result = await response.json();
-                
-                if (result.status === "success") {
-                    alert('✅ Presupuesto guardado con éxito en la hoja "presupuestos"!');
-                } else {
-                    alert(`❌ Error al guardar: ${result.message}`);
-                }
-            } catch (error) {
-                alert('❌ Error de conexión al guardar. Revise la consola para detalles.');
-                console.error('Error de conexión:', error);
-            } finally {
-                 saveBtn.textContent = 'Guardar Presupuesto';
-                 saveBtn.disabled = false;
-            }
-        }
-
-        // Iniciar
-        cargarDatos();
-    </script>
+    <!-- Visión -->
+    <section class="section">
+      <div class="container">
+        <img src="./img/vision.jpg" alt="Visión" />
+        <div class="text">
+          <h2>Visión</h2>
+          <p>Ser referentes en velas artesanales a nivel nacional...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
 </body>
 </html>
