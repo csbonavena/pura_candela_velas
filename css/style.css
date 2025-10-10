@@ -10,8 +10,8 @@
   --c8: #f0f9d7; /* verde lima suave */
   --c9: #ffc2d1; /* coral pastel */
   --c10: #d6f0f5; /* turquesa claro */
-  --linea-oscura: #b8a7c9; /* linea debajo de los links */
-  --header-bg: #b8a7c9; /* linea detras de los links */
+  --linea-oscura: #b8a7c9;
+  --header-bg: #b8a7c9;
   --text-light: white;
   --text-dark: #4a4a4a;
 }
@@ -23,12 +23,12 @@
   box-sizing: border-box;
 }
 
-html, body {
+html {
   height: 100%;
-  overflow-x: hidden;
 }
 
 body {
+  /* Fondo animado */
   background: linear-gradient(
     135deg,
     var(--c1) 0%,
@@ -45,11 +45,15 @@ body {
   );
   background-size: 200% 200%;
   animation: gradientBG 25s ease infinite;
+  
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: var(--text-dark);
-  margin: 0;
-  padding: 0;
   overflow-x: hidden;
+  
+  /* Elimina espacio extra */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes gradientBG {
@@ -74,7 +78,7 @@ header {
 }
 
 .logo img {
-  height: 56px;
+  height: 64px;
 }
 
 nav a {
@@ -109,13 +113,13 @@ nav a:hover {
   font-weight: 600;
   font-size: 1.1rem;
   text-align: center;
-  font-size: 0; /* Elimina espacio inferior */
+  font-size: 0;
 }
 
 .marquee-text-content {
   display: inline-block;
   animation: scrollText 22s linear infinite;
-  font-size: 1.1rem; /* Restaura el tamaño del texto */
+  font-size: 1.1rem;
 }
 
 /* ===== MARQUESINA DE IMÁGENES ===== */
@@ -123,7 +127,8 @@ nav a:hover {
   padding: 1.5rem 0;
   overflow: hidden;
   white-space: nowrap;
-  font-size: 0; /* Elimina espacio fantasma */
+  font-size: 0;
+  flex-shrink: 0;
 }
 
 .marquee-images .content {
@@ -138,7 +143,7 @@ nav a:hover {
   border-radius: 12px;
   margin: 0 0.5rem;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  vertical-align: top; /* Elimina gap inferior */
+  vertical-align: top;
 }
 
 /* ===== ANIMACIONES ===== */
@@ -171,7 +176,7 @@ nav a:hover {
     padding: 1rem 0;
   }
   .marquee-images img {
-    height: 200px;
+    height: 260px;
     margin: 0 0.35rem;
   }
   .marquee-text {
@@ -181,25 +186,4 @@ nav a:hover {
   .marquee-text-content {
     font-size: 0.95rem;
   }
-}
-/* Elimina el espacio extra al final */
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.marquee-images {
-  padding: 1.5rem 0;
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 0;
-  flex-shrink: 0; /* Evita que se contraiga */
-}
-
-/* Asegúrate de que el fondo no se extienda innecesariamente */
-html, body {
-  height: auto;
-  min-height: 100vh;
-  overflow-x: hidden;
 }
