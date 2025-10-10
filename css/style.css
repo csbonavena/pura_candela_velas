@@ -1,11 +1,17 @@
 /* ===== VARIABLES DE COLORES PASTELES ===== */
 :root {
-  --pastel-rosa: #ffd6e0;
-  --pastel-verde: #d0f4de;
-  --pastel-lavanda: #e2d9f3;
-  --pastel-amarillo: #fff3b2;
-  --linea-oscura: #b8a7c9;
-  --header-bg: #2d2d2d;
+  --c1: #ffd6e0; /* rosa */
+  --c2: #d0f4de; /* verde menta */
+  --c3: #e2d9f3; /* lavanda */
+  --c4: #fff3b2; /* amarillo crema */
+  --c5: #d4f1f9; /* celeste */
+  --c6: #ffe0c9; /* melocotón */
+  --c7: #e8d5ef; /* lila claro */
+  --c8: #f0f9d7; /* verde lima suave */
+  --c9: #ffc2d1; /* coral pastel */
+  --c10: #d6f0f5; /* turquesa claro */
+  --linea-oscura: #b8a7c9; /* linea debajo de los links */
+  --header-bg: #b8a7c9; /* linea detras de los links */
   --text-light: white;
   --text-dark: #4a4a4a;
 }
@@ -17,23 +23,33 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body {
-  /* Fondo abstracto animado con pasteles */
   background: linear-gradient(
     135deg,
-    var(--pastel-rosa) 0%,
-    var(--pastel-verde) 25%,
-    var(--pastel-lavanda) 50%,
-    var(--pastel-amarillo) 75%,
-    var(--pastel-rosa) 100%
+    var(--c1) 0%,
+    var(--c2) 10%,
+    var(--c3) 20%,
+    var(--c4) 30%,
+    var(--c5) 40%,
+    var(--c6) 50%,
+    var(--c7) 60%,
+    var(--c8) 70%,
+    var(--c9) 80%,
+    var(--c10) 90%,
+    var(--c1) 100%
   );
-  background-size: 400% 400%;
-  animation: gradientBG 18s ease infinite;
+  background-size: 200% 200%;
+  animation: gradientBG 25s ease infinite;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: var(--text-dark);
-  overflow-x: hidden;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 @keyframes gradientBG {
@@ -58,7 +74,7 @@ header {
 }
 
 .logo img {
-  height: 56px; /* logo más grande */
+  height: 56px;
 }
 
 nav a {
@@ -80,10 +96,10 @@ nav a:hover {
 .divider {
   height: 4px;
   background: var(--linea-oscura);
-  margin-top: 84px; /* ajustado al nuevo alto del header */
+  margin-top: 84px;
 }
 
-/* ===== MARQUESINA DE TEXTO (BANNER) ===== */
+/* ===== MARQUESINA DE TEXTO ===== */
 .marquee-text {
   padding: 0.6rem 0;
   background: var(--linea-oscura);
@@ -93,11 +109,13 @@ nav a:hover {
   font-weight: 600;
   font-size: 1.1rem;
   text-align: center;
+  font-size: 0; /* Elimina espacio inferior */
 }
 
 .marquee-text-content {
   display: inline-block;
   animation: scrollText 22s linear infinite;
+  font-size: 1.1rem; /* Restaura el tamaño del texto */
 }
 
 /* ===== MARQUESINA DE IMÁGENES ===== */
@@ -105,11 +123,12 @@ nav a:hover {
   padding: 1.5rem 0;
   overflow: hidden;
   white-space: nowrap;
+  font-size: 0; /* Elimina espacio fantasma */
 }
 
 .marquee-images .content {
   display: inline-block;
-  animation: scrollImages 25s linear infinite;
+  animation: scrollImages 28s linear infinite;
 }
 
 .marquee-images img {
@@ -117,8 +136,9 @@ nav a:hover {
   width: auto;
   object-fit: cover;
   border-radius: 12px;
-  margin: 0 0.5rem; /* menos espacio entre imágenes */
+  margin: 0 0.5rem;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  vertical-align: top; /* Elimina gap inferior */
 }
 
 /* ===== ANIMACIONES ===== */
@@ -155,7 +175,10 @@ nav a:hover {
     margin: 0 0.35rem;
   }
   .marquee-text {
-    font-size: 0.95rem;
+    font-size: 0;
     padding: 0.4rem 0;
+  }
+  .marquee-text-content {
+    font-size: 0.95rem;
   }
 }
