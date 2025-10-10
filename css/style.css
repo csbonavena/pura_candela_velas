@@ -132,7 +132,7 @@ nav a:hover {
 }
 
 .marquee-images img {
-  height: 260px;
+  height: 400px;
   width: auto;
   object-fit: cover;
   border-radius: 12px;
@@ -181,4 +181,25 @@ nav a:hover {
   .marquee-text-content {
     font-size: 0.95rem;
   }
+}
+/* Elimina el espacio extra al final */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.marquee-images {
+  padding: 1.5rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0;
+  flex-shrink: 0; /* Evita que se contraiga */
+}
+
+/* Asegúrate de que el fondo no se extienda innecesariamente */
+html, body {
+  height: auto;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
