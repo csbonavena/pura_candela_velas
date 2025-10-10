@@ -1,1 +1,93 @@
 css/style.css
+/* Colores pasteles suaves */
+:root {
+  --color-1: #f9f1f7; /* rosa claro */
+  --color-2: #f0f8f5; /* verde menta */
+  --color-3: #f5f0fc; /* lavanda */
+  --color-4: #fdf4e8; /* crema */
+  --text: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Fondo abstracto con degradados suaves por sección */
+section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  scroll-snap-align: start;
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--color-1), var(--color-2));
+  text-align: center;
+}
+
+.section:nth-child(2) { background: linear-gradient(135deg, var(--color-2), var(--color-3)); }
+.section:nth-child(3) { background: linear-gradient(135deg, var(--color-3), var(--color-4)); }
+.section:nth-child(4) { background: linear-gradient(135deg, var(--color-4), var(--color-1)); }
+
+/* Contenido */
+.content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+.content p {
+  font-size: 1.4rem;
+  opacity: 0.9;
+}
+
+.container {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container.reverse {
+  flex-direction: row-reverse;
+}
+
+img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.text {
+  max-width: 600px;
+}
+.text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.2rem;
+}
+.text p {
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .container.reverse {
+    flex-direction: column;
+  }
+  .content h1 {
+    font-size: 2.5rem;
+  }
+}
