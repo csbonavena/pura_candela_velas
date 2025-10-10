@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Precios - Pura Candela</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Estilos específicos para la galería */
+    main {
+      max-width: 1400px;
+      margin: 100px auto 40px;
+      padding: 0 1.5rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      font-size: 2.4rem;
+      color: #5a4a66;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .product-info h3 {
+      margin-bottom: 0.5rem;
+      color: #4a4a4a;
+    }
+
+    .price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #b8a7c9;
+      margin: 0.6rem 0;
+    }
+
+    .btn {
+      background: #b8a7c9;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #9a87b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      main {
+        margin-top: 90px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra superior (misma que index.html) -->
+  <header>
+    <div class="logo">
+      <img src="img/logo solo nombre.png" alt="Pura Candela" />
+    </div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="precios.html">Precios</a>
+      <a href="presupuesto.html">Presupuesto</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>✨ Nuestros Productos</h1>
+    <div class="gallery">
+      <!-- Ejemplo de producto 1 -->
+      <div class="product-card">
+        <img src="img/reel1.png" alt="Vela Aromática Lavanda" />
+        <div class="product-info">
+          <h3>Vela Lavanda</h3>
+          <div class="price">$1.200</div>
+          <button class="btn">Agregar</button>
+        </div>
+      </div>
+
+      <!-- Producto 2 -->
+      <div class="product-card">
+        <img src="img/reel2.png" alt="Vela Cítrica" />
+        <div class="product-info">
+          <h3>Vela Cítrica</h3>
+          <div class="price">$1.350</div>
+          <button class="btn">Agregar</button>
+        </div>
+      </div>
+
+      <!-- Producto 3 -->
+      <div class="product-card">
+        <img src="img/reel3.png" alt="Vela Especias" />
+        <div class="product-info">
+          <h3>Vela Especias</h3>
+          <div class="price">$1.500</div>
+          <button class="btn">Agregar</button>
+        </div>
+      </div>
+
+      <!-- Producto 4 -->
+      <div class="product-card">
+        <img src="img/reel4.png" alt="Vela Oceánica" />
+        <div class="product-info">
+          <h3>Vela Oceánica</h3>
+          <div class="price">$1.400</div>
+          <button class="btn">Agregar</button>
+        </div>
+      </div>
+
+      <!-- Agrega más productos copiando este bloque -->
+    </div>
+  </main>
+</body>
+</html>
