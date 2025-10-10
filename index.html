@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pura Candela - Presupuestos</title>
+  <style>
+    :root {
+      --primary: #d4a574; /* beige cálido */
+      --secondary: #5e454b; /* terracota oscuro */
+      --light: #f8f4f0;
+      --dark: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body {
+      background-color: var(--light);
+      color: var(--dark);
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 2px solid var(--primary);
+    }
+    h1 {
+      color: var(--secondary);
+      font-size: 2rem;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover { background-color: #c29565; }
+    #resultado {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: none;
+    }
+    .presupuesto-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--secondary);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✨ Pura Candela</h1>
+    <p>Generá tu presupuesto en segundos</p>
+  </header>
+
+  <div class="form-group">
+    <label for="producto">Producto</label>
+    <select id="producto"></select>
+  </div>
+
+  <div class="form-group">
+    <label for="cantidad">Cantidad</label>
+    <input type="number" id="cantidad" min="1" value="1" />
+  </div>
+
+  <div class="form-group">
+    <label for="margen">Margen de ganancia (%)</label>
+    <input type="number" id="margen" min="0" placeholder="Ej: 100" />
+  </div>
+
+  <button onclick="calcularPresupuesto()">Calcular presupuesto</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    // ✅ TU SHEET ID (ya configurado)
+    const SHEET_ID = "19GzYK-3uDduyXzGqEojvSjGZx1Sd_ECEB5Q5UUbSR7k";
+    const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?`;
+
+    let productos = [];
+    let insumos = {};
+    let margenes = {};
+
+    async function cargarDatos() {
+      try {
+        // Cargar insumos (Hoja "Insumos", gid=792118100)
+        const resInsumos = await fetch(`${BASE_URL}tq=SELECT%20A%2CB%2CC%20WHERE%20A%20IS%20NOT%20NULL&gid=792118100`);
+        const txtInsumos = await resInsumos.text();
+        const jsonInsumos = JSON.parse(txtInsumos.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
+        insumos = {};
+        jsonInsumos.table.rows.forEach(row => {
+          const tipo = row.c[0].v;
+          const costo = parseFloat(row.c[2].v);
+          insumos[tipo] = costo;
+        });
+
+        // Cargar márgenes (Hoja "Márgenes", gid=444473679)
+        const resMargenes = await fetch(`${BASE_URL}tq=SELECT%20A%2CB%20WHERE%20A%20IS%20NOT%20NULL&gid=444473679`);
+        const txtMargenes = await resMargenes.text();
+        const jsonMargenes = JSON.parse(txtMargenes.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
+        margenes = {};
+        jsonMargenes.table.rows.forEach(row => {
+          const tipo = row.c[0].v;
+          const margen = parseFloat(row.c[1].v);
+          margenes[tipo] = margen;
+        });
+
+        // Cargar productos (Hoja "Productos", gid=1442886688)
+        const resProductos = await fetch(`${BASE_URL}tq=SELECT%20A%2CB%2CC%2CD%2CE%2CF%2CG%2CH%2CI%2CJ%2CK%20WHERE%20A%20IS%20NOT%20NULL&gid=1442886688`);
+        const txtProductos = await resProductos.text();
+        const jsonProductos = JSON.parse(txtProductos.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", ""));
+        productos = jsonProductos.table.rows.map(row => ({
+          nombre: row.c[0].v,
+          tipo: row.c[1].v,
+          envase: parseFloat(row.c[2].v) || 0,
+          cera: parseFloat(row.c[3].v) || 0,
+          mejorador: parseFloat(row.c[4].v) || 0,
+          esencia: parseFloat(row.c[5].v) || 0,
+          pabilo: parseFloat(row.c[6].v) || 0,
+          ojalillo: parseFloat(row.c[7].v) || 0,
+          pegamento: parseFloat(row.c[8].v) || 0,
+          glicerina: parseFloat(row.c[9].v) || 0,
+          alcohol: parseFloat(row.c[10].v) || 0,
+        }));
+
+        // Llenar select
+        const select = document.getElementById("producto");
+        productos.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.nombre;
+          opt.textContent = p.nombre;
+          select.appendChild(opt);
+        });
+
+        // Rellenar margen predeterminado al cambiar producto
+        select.addEventListener("change", () => {
+          const prod = productos.find(p => p.nombre === select.value);
+          if (prod && margenes[prod.tipo] !== undefined) {
+            document.getElementById("margen").value = margenes[prod.tipo];
+          } else {
+            document.getElementById("margen").value = "";
+          }
+        });
+
+        // Trigger inicial
+        if (productos.length > 0) {
+          select.dispatchEvent(new Event("change"));
+        }
+
+      } catch (e) {
+        console.error("Error al cargar datos:", e);
+        alert("⚠️ No se pudieron cargar los datos. Asegurate de que el Sheet esté publicado.");
+      }
+    }
+
+    function calcularPresupuesto() {
+      const nombre = document.getElementById("producto").value;
+      const cantidad = parseInt(document.getElementById("cantidad").value) || 1;
+      let margenInput = document.getElementById("margen").value;
+      const margen = margenInput !== "" ? parseFloat(margenInput) : 0;
+
+      const prod = productos.find(p => p.nombre === nombre);
+      if (!prod) {
+        alert("Producto no encontrado");
+        return;
+      }
+
+      // Calcular costo de insumos
+      let costoInsumos = 0;
+      if (prod.cera > 0) costoInsumos += prod.cera * (insumos.cera_de_soja || 0);
+      if (prod.mejorador > 0) costoInsumos += prod.mejorador * (insumos.mejorador || 0);
+      if (prod.esencia > 0) costoInsumos += prod.esencia * (insumos.esencia || 0);
+      if (prod.pabilo > 0) costoInsumos += prod.pabilo * (insumos.pabilo || 0);
+      if (prod.ojalillo > 0) costoInsumos += prod.ojalillo * (insumos.ojalillo || 0);
+      if (prod.pegamento > 0) costoInsumos += prod.pegamento * (insumos.pegamento || 0);
+      if (prod.glicerina > 0) costoInsumos += prod.glicerina * (insumos.glicerina || 0);
+      if (prod.alcohol > 0) costoInsumos += prod.alcohol * (insumos.alcohol_cereal || 0);
+
+      const costoTotalUnitario = prod.envase + costoInsumos;
+      const precioVentaUnitario = costoTotalUnitario * (1 + margen / 100);
+      const total = precioVentaUnitario * cantidad;
+
+      // Mostrar resultado
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerHTML = `
+        <div class="presupuesto-item"><span>Producto:</span><strong>${prod.nombre}</strong></div>
+        <div class="presupuesto-item"><span>Cantidad:</span><strong>${cantidad}</strong></div>
+        <div class="presupuesto-item"><span>Costo unitario:</span><strong>$${costoTotalUnitario.toFixed(2)}</strong></div>
+        <div class="presupuesto-item"><span>Margen:</span><strong>${margen}%</strong></div>
+        <div class="presupuesto-item"><span>Precio unitario:</span><strong>$${precioVentaUnitario.toFixed(2)}</strong></div>
+        <div class="total">TOTAL: $${total.toFixed(2)}</div>
+      `;
+      resultadoDiv.style.display = "block";
+    }
+
+    // Iniciar
+    cargarDatos();
+  </script>
+</body>
+</html>
