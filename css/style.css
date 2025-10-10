@@ -1,10 +1,12 @@
-/* Colores pasteles suaves */
+/* Colores pasteles más visibles */
 :root {
-  --color-1: #f5e9f2; /* rosa claro */
-  --color-2: #e9f2ee; /* verde menta */
-  --color-3: #efe9f4; /* lavanda */
-  --color-4: #f9eede; /* crema */
-  --text: #333;
+  --pastel-rosa: #ffd6e0;
+  --pastel-verde: #d0f4de;
+  --pastel-lavanda: #e2d9f3;
+  --pastel-amarillo: #fff3b2;
+  --fondo: var(--pastel-rosa); /* Cambia si quieres otro */
+  --linea-oscura: #b8a7c9; /* Lila suave pero visible */
+  --text: #4a4a4a;
 }
 
 * {
@@ -14,79 +16,86 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  line-height: 1.6;
-  color: var(--text);
+  background-color: var(--fondo);
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
 }
 
-/* Fondo abstracto con degradados suaves por sección */
-section {
-  min-height: 100vh;
+/* --- HEADER --- */
+header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 2rem;
-  scroll-snap-align: start;
-}
-
-.hero {
-  background: linear-gradient(135deg, var(--color-1), var(--color-2));
-  text-align: center;
-}
-
-.section:nth-child(2) { background: linear-gradient(135deg, var(--color-2), var(--color-3)); }
-.section:nth-child(3) { background: linear-gradient(135deg, var(--color-3), var(--color-4)); }
-.section:nth-child(4) { background: linear-gradient(135deg, var(--color-4), var(--color-1)); }
-
-/* Contenido */
-.content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-}
-.content p {
-  font-size: 1.4rem;
-  opacity: 0.9;
-}
-
-.container {
-  display: flex;
-  gap: 3rem;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.container.reverse {
-  flex-direction: row-reverse;
-}
-
-img {
+  padding: 1.2rem 3rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  position: fixed;
+  top: 0;
   width: 100%;
-  max-width: 500px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  z-index: 100;
 }
 
-.text {
-  max-width: 600px;
+.logo img {
+  height: 40px;
 }
-.text h2 {
-  font-size: 2.2rem;
-  margin-bottom: 1.2rem;
-}
-.text p {
+
+nav a {
+  margin-left: 2rem;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
   font-size: 1.1rem;
+  transition: transform 0.25s ease, color 0.25s ease;
+  display: inline-block;
+}
+
+nav a:hover {
+  transform: scale(1.12);
+  color: var(--linea-oscura);
+}
+
+/* --- DIVISORIA --- */
+.divider {
+  height: 4px;
+  background: var(--linea-oscura);
+  margin-top: 72px; /* altura del header + un poco */
+}
+
+/* --- MARQUESINA --- */
+.marquee {
+  padding: 4rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: scroll 25s linear infinite;
+}
+
+.marquee-content img {
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 0 1rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    text-align: center;
+  header {
+    padding: 1rem;
   }
-  .container.reverse {
-    flex-direction: column;
+  nav a {
+    margin-left: 1.2rem;
+    font-size: 1rem;
   }
-  .content h1 {
-    font-size: 2.5rem;
+  .marquee-content img {
+    height: 200px;
   }
 }
