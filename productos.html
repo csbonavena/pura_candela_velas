@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Productos - Pura Candela</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    main {
+      max-width: 1400px;
+      margin: 100px auto 40px;
+      padding: 0 1.5rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      font-size: 2.4rem;
+      color: #5a4a66;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+    .product-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+    }
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .product-info h3 {
+      margin-bottom: 0.5rem;
+      color: #4a4a4a;
+    }
+    .price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #b8a7c9;
+      margin: 0.6rem 0;
+    }
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.2rem;
+      color: #666;
+    }
+    .error {
+      text-align: center;
+      padding: 2rem;
+      color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="img/logo.png" alt="Pura Candela" />
+    </div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="presupuesto.html">Presupuesto</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>✨ Nuestros Productos</h1>
+    <div id="gallery" class="gallery">
+      <div class="loading">Cargando productos...</div>
+    </div>
+  </main>
+
+  <script>
+    // URL de la hoja "precio_productos"
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
+
+    const gallery = document.getElementById('gallery');
+
+    // Función para limpiar el JSON de Google
+    function parseGoogleSheetJSON(text) {
+      const json = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
+      return JSON.parse(json);
+    }
+
+    // Cargar y mostrar productos
+    fetch(sheetUrl)
+      .then(response => response.text())
+      .then(data => {
+        const parsed = parseGoogleSheetJSON(data);
+        const rows = parsed.table.rows;
+
+        if (!rows || rows.length === 0) {
+          gallery.innerHTML = '<div class="error">No se encontraron productos.</div>';
+          return;
+        }
+
+        let html = '';
+        rows.forEach(row => {
+          const [nombre, precio, img] = row.c.map(cell => cell ? cell.v : '');
+          const imageUrl = img || 'img/default.jpg'; // imagen por defecto si no hay
+          const priceFormatted = precio ? `$${Number(precio).toLocaleString('es-AR')}` : '—';
+
+          html += `
+            <div class="product-card">
+              <img src="${imageUrl}" alt="${nombre || 'Producto'}" onerror="this.src='img/default.jpg'">
+              <div class="product-info">
+                <h3>${nombre || 'Sin nombre'}</h3>
+                <div class="price">${priceFormatted}</div>
+                <button class="btn" onclick="alert('Función de presupuesto próximamente')">Agregar</button>
+              </div>
+            </div>
+          `;
+        });
+
+        gallery.innerHTML = html;
+      })
+      .catch(err => {
+        console.error('Error al cargar productos:', err);
+        gallery.innerHTML = '<div class="error">Error al cargar los productos. Intente más tarde.</div>';
+      });
+  </script>
+</body>
+</html>
