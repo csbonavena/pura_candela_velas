@@ -113,27 +113,31 @@
           return;
         }
 
-        let html = '';
-        rows.forEach(row => {
-          // Columnas: C (índice 2), D (3), I (8)
-          const celdas = row.c || [];
-          const imgUrl = celdas[2]?.v; // URL completa desde Sheets
-          const nombre = celdas[3]?.v || 'Producto sin nombre';
-          const precio = celdas[8]?.v;
+let html = '';
+rows.forEach(row => {
+  const celdas = row.c || [];
+  const imgUrl = celdas[2]?.v;
+  const nombre = celdas[3]?.v;
+  const precio = celdas[8]?.v;
 
-          const precioFormateado = precio ? `$${Number(precio).toLocaleString('es-AR')}` : '—';
+  // ✅ Solo mostrar si hay nombre e imagen
+  if (!nombre || !imgUrl) return;
 
-          html += `
-            <div class="product-card">
-              <img src="${imgUrl}" alt="${nombre}">
-              <div class="product-info">
-                <h3>${nombre}</h3>
-                <div class="price">${precioFormateado}</div>
-                <button class="btn" onclick="agregarAlPresupuesto('${nombre}', ${precio || 0})">Agregar</button>
-              </div>
-            </div>
-          `;
-        });
+  const precioNum = parseFloat(precio);
+  const precioValido = !isNaN(precioNum) ? precioNum : 0;
+  const precioFormateado = `$${precioValido.toLocaleString('es-AR')}`;
+
+  html += `
+    <div class="product-card">
+      <img src="${imgUrl}" alt="${nombre}">
+      <div class="product-info">
+        <h3>${nombre}</h3>
+        <div class="price">${precioFormateado}</div>
+        <button class="btn" onclick="agregarAlPresupuesto('${nombre.replace(/'/g, "\\'")}', ${precioValido})">Agregar</button>
+      </div>
+    </div>
+  `;
+});
 
         gallery.innerHTML = html;
       })
