@@ -6,22 +6,26 @@
   <title>Productos - Pura Candela</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
+    /* Estilos específicos para la galería */
     main {
       max-width: 1400px;
       margin: 100px auto 40px;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
     }
+
     h1 {
       text-align: center;
       margin-bottom: 2.5rem;
       font-size: 2.4rem;
       color: #5a4a66;
     }
+
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 2rem;
     }
+
     .product-card {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(6px);
@@ -30,36 +34,36 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       transition: transform 0.3s ease;
     }
+
     .product-card:hover {
       transform: translateY(-6px);
     }
+
     .product-card img {
       width: 100%;
-      height: 220px;
+      height: 240px;
       object-fit: cover;
+      display: block;
     }
+
     .product-info {
       padding: 1.2rem;
       text-align: center;
     }
+
     .product-info h3 {
       margin-bottom: 0.5rem;
       color: #4a4a4a;
+      font-size: 1.3rem;
     }
+
     .price {
       font-size: 1.4rem;
       font-weight: 700;
       color: #b8a7c9;
       margin: 0.6rem 0;
     }
-    .loading, .error {
-      text-align: center;
-      padding: 2rem;
-      font-size: 1.2rem;
-    }
-    .error {
-      color: #d32f2f;
-    }
+
     .btn {
       background: #b8a7c9;
       color: white;
@@ -69,6 +73,38 @@
       cursor: pointer;
       font-weight: 600;
       margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #9a87b8;
+    }
+
+    .loading, .error {
+      text-align: center;
+      padding: 2rem;
+      font-size: 1.2rem;
+    }
+
+    .error {
+      color: #d32f2f;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      main {
+        margin-top: 90px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .product-card img {
+        height: 220px;
+      }
     }
   </style>
 </head>
@@ -92,7 +128,7 @@
   </main>
 
   <script>
-    // URL pública de la hoja "precio_productos"
+    // URL pública de la hoja "precio_productos" (gid=4461674)
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
 
     const gallery = document.getElementById('gallery');
@@ -113,41 +149,48 @@
           return;
         }
 
-let html = '';
-rows.forEach(row => {
-  const celdas = row.c || [];
-  const imgUrl = celdas[2]?.v;
-  const nombre = celdas[3]?.v;
-  const precio = celdas[8]?.v;
+        let html = '';
+        rows.forEach(row => {
+          const celdas = row.c || [];
+          const imgUrl = celdas[2]?.v; // Columna C
+          const nombre = celdas[3]?.v; // Columna D
+          const precio = celdas[8]?.v; // Columna I
 
-  // ✅ Solo mostrar si hay nombre e imagen
-  if (!nombre || !imgUrl) return;
+          // ✅ Solo mostrar si hay nombre e imagen válidos
+          if (!nombre || !imgUrl) return;
 
-  const precioNum = parseFloat(precio);
-  const precioValido = !isNaN(precioNum) ? precioNum : 0;
-  const precioFormateado = `$${precioValido.toLocaleString('es-AR')}`;
+          const precioNum = parseFloat(precio);
+          const precioValido = !isNaN(precioNum) ? precioNum : 0;
+          const precioFormateado = `$${precioValido.toLocaleString('es-AR')}`;
 
-  html += `
-    <div class="product-card">
-      <img src="${imgUrl}" alt="${nombre}">
-      <div class="product-info">
-        <h3>${nombre}</h3>
-        <div class="price">${precioFormateado}</div>
-        <button class="btn" onclick="agregarAlPresupuesto('${nombre.replace(/'/g, "\\'")}', ${precioValido})">Agregar</button>
-      </div>
-    </div>
-  `;
-});
+          // Escapar comillas simples en el nombre para JS
+          const nombreEscapado = nombre.replace(/'/g, "\\'");
 
-        gallery.innerHTML = html;
+          html += `
+            <div class="product-card">
+              <img src="${imgUrl}" alt="${nombre}">
+              <div class="product-info">
+                <h3>${nombre}</h3>
+                <div class="price">${precioFormateado}</div>
+                <button class="btn" onclick="agregarAlPresupuesto('${nombreEscapado}', ${precioValido})">Agregar</button>
+              </div>
+            </div>
+          `;
+        });
+
+        if (html === '') {
+          gallery.innerHTML = '<div class="error">No se encontraron productos válidos.</div>';
+        } else {
+          gallery.innerHTML = html;
+        }
       })
       .catch(err => {
-        console.error('Error:', err);
+        console.error('Error al cargar productos:', err);
         gallery.innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
       });
 
     function agregarAlPresupuesto(nombre, precio) {
-      // Guardar en localStorage o redirigir a presupuesto.html con datos
+      // Guardar en localStorage para usar en presupuesto.html
       const producto = { nombre, precio };
       localStorage.setItem('productoSeleccionado', JSON.stringify(producto));
       window.location.href = 'presupuesto.html';
