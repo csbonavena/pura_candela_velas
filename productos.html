@@ -92,7 +92,7 @@
   </main>
 
   <script>
-    // URL pública de la hoja "precio_productos" (gid=4461674)
+    // URL pública de la hoja "precio_productos"
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
 
     const gallery = document.getElementById('gallery');
@@ -117,7 +117,7 @@
         rows.forEach(row => {
           // Columnas: C (índice 2), D (3), I (8)
           const celdas = row.c || [];
-          const imgUrl = celdas[2]?.v || 'img/default.jpg';
+          const imgUrl = celdas[2]?.v; // URL completa desde Sheets
           const nombre = celdas[3]?.v || 'Producto sin nombre';
           const precio = celdas[8]?.v;
 
@@ -125,7 +125,7 @@
 
           html += `
             <div class="product-card">
-              <img src="${imgUrl}" alt="${nombre}" onerror="this.src='img/default.jpg'">
+              <img src="${imgUrl}" alt="${nombre}">
               <div class="product-info">
                 <h3>${nombre}</h3>
                 <div class="price">${precioFormateado}</div>
@@ -142,10 +142,11 @@
         gallery.innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
       });
 
-    // Función temporal (luego se conectará con presupuesto.html)
     function agregarAlPresupuesto(nombre, precio) {
-      alert(`Agregado: ${nombre} - $${precio}`);
-      // Próximo paso: guardar en localStorage o redirigir con datos
+      // Guardar en localStorage o redirigir a presupuesto.html con datos
+      const producto = { nombre, precio };
+      localStorage.setItem('productoSeleccionado', JSON.stringify(producto));
+      window.location.href = 'presupuesto.html';
     }
   </script>
 </body>
