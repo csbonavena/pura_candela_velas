@@ -52,16 +52,23 @@
       color: #b8a7c9;
       margin: 0.6rem 0;
     }
-    .loading {
+    .loading, .error {
       text-align: center;
       padding: 2rem;
       font-size: 1.2rem;
-      color: #666;
     }
     .error {
-      text-align: center;
-      padding: 2rem;
       color: #d32f2f;
+    }
+    .btn {
+      background: #b8a7c9;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
@@ -85,42 +92,44 @@
   </main>
 
   <script>
-    // URL de la hoja "precio_productos"
+    // URL pública de la hoja "precio_productos" (gid=4461674)
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
 
     const gallery = document.getElementById('gallery');
 
-    // Función para limpiar el JSON de Google
     function parseGoogleSheetJSON(text) {
-      const json = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
-      return JSON.parse(json);
+      const jsonStr = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
+      return JSON.parse(jsonStr);
     }
 
-    // Cargar y mostrar productos
     fetch(sheetUrl)
-      .then(response => response.text())
+      .then(res => res.text())
       .then(data => {
         const parsed = parseGoogleSheetJSON(data);
         const rows = parsed.table.rows;
 
         if (!rows || rows.length === 0) {
-          gallery.innerHTML = '<div class="error">No se encontraron productos.</div>';
+          gallery.innerHTML = '<div class="error">No hay productos disponibles.</div>';
           return;
         }
 
         let html = '';
         rows.forEach(row => {
-          const [nombre, precio, img] = row.c.map(cell => cell ? cell.v : '');
-          const imageUrl = img || 'img/default.jpg'; // imagen por defecto si no hay
-          const priceFormatted = precio ? `$${Number(precio).toLocaleString('es-AR')}` : '—';
+          // Columnas: C (índice 2), D (3), I (8)
+          const celdas = row.c || [];
+          const imgUrl = celdas[2]?.v || 'img/default.jpg';
+          const nombre = celdas[3]?.v || 'Producto sin nombre';
+          const precio = celdas[8]?.v;
+
+          const precioFormateado = precio ? `$${Number(precio).toLocaleString('es-AR')}` : '—';
 
           html += `
             <div class="product-card">
-              <img src="${imageUrl}" alt="${nombre || 'Producto'}" onerror="this.src='img/default.jpg'">
+              <img src="${imgUrl}" alt="${nombre}" onerror="this.src='img/default.jpg'">
               <div class="product-info">
-                <h3>${nombre || 'Sin nombre'}</h3>
-                <div class="price">${priceFormatted}</div>
-                <button class="btn" onclick="alert('Función de presupuesto próximamente')">Agregar</button>
+                <h3>${nombre}</h3>
+                <div class="price">${precioFormateado}</div>
+                <button class="btn" onclick="agregarAlPresupuesto('${nombre}', ${precio || 0})">Agregar</button>
               </div>
             </div>
           `;
@@ -129,9 +138,15 @@
         gallery.innerHTML = html;
       })
       .catch(err => {
-        console.error('Error al cargar productos:', err);
-        gallery.innerHTML = '<div class="error">Error al cargar los productos. Intente más tarde.</div>';
+        console.error('Error:', err);
+        gallery.innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
       });
+
+    // Función temporal (luego se conectará con presupuesto.html)
+    function agregarAlPresupuesto(nombre, precio) {
+      alert(`Agregado: ${nombre} - $${precio}`);
+      // Próximo paso: guardar en localStorage o redirigir con datos
+    }
   </script>
 </body>
 </html>
