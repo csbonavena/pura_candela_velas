@@ -107,34 +107,20 @@ body {
 }
 
 .nav-btn {
-  margin-left: 1.8rem;
-  text-decoration: none;
+  background-color: var(--linea-oscura);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
   color: var(--text-light);
   font-weight: 600;
   font-size: 1.05rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.nav-btn::after {
-  content: "";
-  display: block;
-  height: 2px;
-  width: 0%;
-  background: var(--text-light);
-  transition: width 0.3s ease;
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-}
-
-.nav-btn:hover::after,
-.nav-btn.active::after {
-  width: 100%;
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .nav-btn:hover {
-  opacity: 0.9;
+  transform: scale(1.1);
+  background-color: #8b6fa9;
 }
 
 /* ===== DIVISOR ===== */
@@ -160,6 +146,7 @@ body {
 
 .marquee-text-content {
   display: inline-block;
+  min-width: 200%;
   animation: scrollText 22s linear infinite;
 }
 
