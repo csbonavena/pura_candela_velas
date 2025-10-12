@@ -20,19 +20,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <!-- Iconos -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
 
 <body>
+    <div class="animated-bg">
+      <svg width="100vw" height="100vh" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;">
+        <circle class="bg-c1" cx="400" cy="300" r="320" fill="#ffd6e0" fill-opacity="0.7"/>
+        <circle class="bg-c2" cx="1500" cy="250" r="260" fill="#d0f4de" fill-opacity="0.7"/>
+        <circle class="bg-c3" cx="900" cy="900" r="340" fill="#e2d9f3" fill-opacity="0.7"/>
+        <circle class="bg-c4" cx="1700" cy="800" r="220" fill="#fff3b2" fill-opacity="0.7"/>
+        <circle class="bg-c5" cx="200" cy="900" r="260" fill="#d4f1f9" fill-opacity="0.7"/>
+      </svg>
+    </div>
   <!-- HEADER -->
   <header class="header">
     <div class="container header-content">
-      <a href="index.html" class="logo">
-        <img src="img/logo.png" alt="Logo de Pura Candela" />
-      </a>
-
+      <div class="logo-card">
+        <a href="index.html" class="logo">
+          <img src="img/logo.png" alt="Logo de Pura Candela" />
+        </a>
+      </div>
       <nav class="nav-menu">
-        <a href="index.html" class="nav-btn active">Inicio</a>
         <a href="productos.html" class="nav-btn">Productos</a>
         <a href="presupuesto.html" class="nav-btn">Presupuesto</a>
         <a href="nuevoproducto.html" class="nav-btn">Producto nuevo</a>
@@ -45,29 +54,29 @@
   <!-- DIVISOR -->
   <hr class="divider" />
 
+  <!-- MARQUESINA DE IMÁGENES -->
+  <section class="marquee-images">
+    <div class="content">
+      <img src="img/reel_inicio/reel1.png" alt="Vela artesanal Pura Candela" loading="lazy" />
+      <img src="img/reel_inicio/reel2.png" alt="Difusor aromático" loading="lazy" />
+      <img src="img/reel_inicio/reel3.png" alt="Home spray natural" loading="lazy" />
+      <img src="img/reel_inicio/reel4.png" alt="Souvenir aromático" loading="lazy" />
+      <img src="img/reel_inicio/reel5.png" alt="Fragancia de Pura Candela" loading="lazy" />
+      <img src="img/reel_inicio/reel6.png" alt="Colección artesanal" loading="lazy" />
+      <!-- Repetición para animación continua -->
+      <img src="img/reel_inicio/reel1.png" alt="Vela artesanal Pura Candela" loading="lazy" />
+      <img src="img/reel_inicio/reel2.png" alt="Difusor aromático" loading="lazy" />
+      <img src="img/reel_inicio/reel3.png" alt="Home spray natural" loading="lazy" />
+      <img src="img/reel_inicio/reel4.png" alt="Souvenir aromático" loading="lazy" />
+      <img src="img/reel_inicio/reel5.png" alt="Fragancia de Pura Candela" loading="lazy" />
+      <img src="img/reel_inicio/reel6.png" alt="Colección artesanal" loading="lazy" />
+    </div>
+  </section>
+
   <!-- MARQUESINA DE TEXTO -->
   <section class="marquee-text">
     <div class="marquee-text-content">
       🕯️ Hecho a mano • Aromas naturales • Envíos a todo el país • Sostenible • Personalizable • 🕯️ Hecho a mano • Aromas naturales • Envíos a todo el país • Sostenible • Personalizable •
-    </div>
-  </section>
-
-  <!-- MARQUESINA DE IMÁGENES -->
-  <section class="marquee-images">
-    <div class="content">
-      <img src="img/reel1.png" alt="Vela artesanal Pura Candela" loading="lazy" />
-      <img src="img/reel2.png" alt="Difusor aromático" loading="lazy" />
-      <img src="img/reel3.png" alt="Home spray natural" loading="lazy" />
-      <img src="img/reel4.png" alt="Souvenir aromático" loading="lazy" />
-      <img src="img/reel5.png" alt="Fragancia de Pura Candela" loading="lazy" />
-      <img src="img/reel6.png" alt="Colección artesanal" loading="lazy" />
-      <!-- Repetición para animación continua -->
-      <img src="img/reel1.png" alt="Vela artesanal Pura Candela" loading="lazy" />
-      <img src="img/reel2.png" alt="Difusor aromático" loading="lazy" />
-      <img src="img/reel3.png" alt="Home spray natural" loading="lazy" />
-      <img src="img/reel4.png" alt="Souvenir aromático" loading="lazy" />
-      <img src="img/reel5.png" alt="Fragancia de Pura Candela" loading="lazy" />
-      <img src="img/reel6.png" alt="Colección artesanal" loading="lazy" />
     </div>
   </section>
 
@@ -84,6 +93,9 @@
       <a href="https://wa.me/541126481446" target="_blank" rel="noopener" aria-label="WhatsApp">
         <i class="fab fa-whatsapp"></i>
       </a>
+      <a href="https://www.tiktok.com/@pura.candela.velas?_t=ZM-90Ua3sCaRrf&_r=1" target="_blank" rel="noopener" aria-label="TikTok">
+        <i class="fab fa-tiktok"></i>
+      </a>
     </div>
   </section>
 
@@ -94,4 +106,3 @@
 
 </body>
 </html>
-

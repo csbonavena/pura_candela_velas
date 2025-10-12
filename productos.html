@@ -22,8 +22,29 @@
 
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
+    }
+
+    @media (min-width: 1200px) {
+      .gallery {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .gallery {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @media (min-width: 600px) and (max-width: 899px) {
+      .gallery {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 599px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .product-card {
@@ -106,26 +127,336 @@
         height: 220px;
       }
     }
+
+    .main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-bar-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 120px;
+      gap: 0;
+    }
+    .filter-toggle, .sort-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px var(--shadow);
+      min-width: 160px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      gap: 0.7rem;
+      margin: 0;
+      position: relative;
+      z-index: 3;
+    }
+    .filter-toggle {
+      margin-right: 1rem;
+      order: -1;
+    }
+    .sort-card {
+      margin-left: auto;
+      order: 1;
+      position: relative;
+    }
+    .filter-toggle span, .sort-card label {
+      color: #4a4a4a;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-right: 0.5rem;
+    }
+    .filter-toggle:after {
+      content: '\25BC'; /* flecha hacia abajo */
+      font-size: 1.6rem;
+      color: #b8a7c9;
+      margin-left: 0.5rem;
+    }
+    .filter-toggle.open:after {
+      transform: rotate(180deg);
+      transition: transform 0.3s;
+    }
+    .sort-card .dropdown-arrow {
+      font-size: 1.6rem;
+      color: #b8a7c9;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .sort-card .dropdown-arrow.open {
+      transform: rotate(180deg);
+    }
+    .sort-dropdown {
+      position: absolute;
+      top: 54px;
+      right: 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px var(--shadow);
+      min-width: 180px;
+      padding: 0.5rem 1rem;
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      animation: fadeIn 0.2s;
+    }
+    .sort-dropdown.open {
+      display: flex;
+    }
+    .sort-option {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #4a4a4a;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 500;
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      margin-bottom: 2px;
+    }
+    .sort-option:last-child {
+      margin-bottom: 0;
+    }
+    .sort-option:hover, .sort-option.selected {
+      background: #f3eafd;
+      color: #7c5ca7;
+    }
+    @media (max-width: 900px) {
+      .top-bar-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 90px;
+      }
+      .filter-toggle, .sort-card {
+        width: 100%;
+        min-width: 0;
+        margin-right: 0;
+        margin-top: 1rem;
+        padding: 0.7rem 1.2rem;
+      }
+      .sort-card {
+        margin-left: 0;
+      }
+      .sort-dropdown {
+        top: 54px;
+        right: 0;
+        left: 0;
+        min-width: 0;
+      }
+    }
+    .top-bar-separator {
+      width: 100%;
+      height: 18px;
+      display: block;
+    }
+    .filter-card {
+      position: absolute;
+      left: 0;
+      top: 56px;
+      z-index: 10;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px var(--shadow);
+      padding: 0.5rem 1rem;
+      min-width: 180px;
+      flex-direction: column;
+      align-items: flex-start;
+      transform: translateY(-10px) scale(0.98);
+      transition: transform 0.3s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.3s;
+      display: flex;
+      opacity: 0;
+      pointer-events: none;
+      border: none;
+      background: #fff;
+      min-height: 60px;
+    }
+    .filter-card.open {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .filter-group {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .filter-group label {
+      font-size: 0.98rem;
+      color: #111 !important;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+    .filter-group select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #4a4a4a;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 500;
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      margin-bottom: 2px;
+      box-shadow: 0 1px 4px rgba(124,92,167,0.08);
+    }
+    .filter-group select:focus {
+      outline: none;
+      background: #f3eafd;
+      color: #7c5ca7;
+    }
+    .selected-filters-bar {
+      width: 100%;
+      min-height: 38px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px var(--shadow);
+      margin: 18px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.98rem;
+      color: #7c5ca7;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .selected-filter-chip {
+      background: #f3eafd;
+      color: #7c5ca7;
+      border-radius: 8px;
+      padding: 0.2rem 0.7rem;
+      margin-right: 0.3rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.97rem;
+    }
+    .selected-filter-chip .remove-filter {
+      background: none;
+      border: none;
+      color: #b8a7c9;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-left: 0.2rem;
+      padding: 0;
+    }
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 0.3rem 0.7rem;
+    }
+    .filter-row {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .filter-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.97rem;
+      background: #f8f6ff;
+      border-radius: 6px;
+      padding: 0.1rem 0.5rem;
+      cursor: pointer;
+      transition: background 0.18s;
+      color: #111 !important;
+      min-width: 70px;
+      justify-content: flex-start;
+    }
+    .filter-checkbox input[type="checkbox"] {
+      accent-color: #b8a7c9;
+      width: 16px;
+      height: 16px;
+      margin-right: 0.2rem;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <img src="img/logo.png" alt="Pura Candela" />
+    <div class="animated-bg">
+      <svg width="100vw" height="100vh" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;">
+        <circle class="bg-c1" cx="400" cy="300" r="320" fill="#ffd6e0" fill-opacity="0.7"/>
+        <circle class="bg-c2" cx="1500" cy="250" r="260" fill="#d0f4de" fill-opacity="0.7"/>
+        <circle class="bg-c3" cx="900" cy="900" r="340" fill="#e2d9f3" fill-opacity="0.7"/>
+        <circle class="bg-c4" cx="1700" cy="800" r="220" fill="#fff3b2" fill-opacity="0.7"/>
+        <circle class="bg-c5" cx="200" cy="900" r="260" fill="#d4f1f9" fill-opacity="0.7"/>
+      </svg>
     </div>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="productos.html">Productos</a>
-      <a href="presupuesto.html">Presupuesto</a>
-    </nav>
+  <header class="header">
+    <div class="container header-content">
+      <div class="logo-card">
+        <a href="index.html" class="logo">
+          <img src="img/logo.png" alt="Logo de Pura Candela" />
+        </a>
+      </div>
+      <nav class="nav-menu">
+        <a href="productos.html" class="nav-btn">Productos</a>
+        <a href="presupuesto.html" class="nav-btn">Presupuesto</a>
+        <a href="nuevoproducto.html" class="nav-btn">Producto nuevo</a>
+        <a href="nuevoinsumo.html" class="nav-btn">Insumos</a>
+        <a href="margenes.html" class="nav-btn">Márgenes</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h1>✨ Nuestros Productos</h1>
+    <div class="top-bar-wrapper">
+      <div class="filter-toggle" id="filter-toggle"><span>Filtros</span></div>
+      <button class="clear-filters-btn" id="clear-filters-btn" style="background:#fff;border-radius:16px;box-shadow:0 2px 10px var(--shadow);min-width:160px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0.7rem 1.5rem;font-size:1rem;font-weight:500;gap:0.7rem;margin-left:1rem;color:#b8a7c9;border:none;font-weight:600;transition:background 0.2s;"><i style="font-size:1.2rem;vertical-align:middle;" class="fa fa-times-circle"></i> Borrar filtros</button>
+      <div class="top-bar">
+        <div class="sort-card" id="sort-card">
+          <label>Ordenar por</label>
+          <span class="dropdown-arrow" id="sort-arrow">&#9660;</span>
+          <div class="sort-dropdown" id="sort-dropdown">
+            <button class="sort-option" data-value="desc">Mayor precio</button>
+            <button class="sort-option" data-value="asc">Menor precio</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-card" id="filter-card">
+        <div id="filters"></div>
+      </div>
+    </div>
+    <div class="selected-filters-bar" id="selected-filters-bar"></div>
+    <span class="top-bar-separator"></span>
     <div id="gallery" class="gallery">
       <div class="loading">Cargando productos...</div>
     </div>
   </main>
+
+  <!-- Carrito flotante -->
+  <div id="cart-fab" style="position:fixed;bottom:32px;right:32px;z-index:1000;width:58px;height:58px;background:#b8a7c9;border-radius:50%;box-shadow:0 4px 16px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#b8a7c9"/><path d="M7 18c-1.104 0-2-.896-2-2s.896-2 2-2h10c1.104 0 2 .896 2 2s-.896 2-2 2H7zm0-2h10v-8H7v8zm2-6h6v6H9v-6z" fill="#fff"/></svg>
+    <span id="cart-count" style="position:absolute;top:10px;right:10px;background:#fff;color:#b8a7c9;font-size:0.9rem;font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;">0</span>
+  </div>
+  <div id="cart-modal" style="display:none;position:fixed;bottom:100px;right:32px;z-index:1001;background:#fff;border-radius:18px;box-shadow:0 6px 32px rgba(0,0,0,0.18);padding:1.2rem 1.5rem;min-width:320px;max-width:90vw;max-height:70vh;overflow-y:auto;">
+    <h2 style="font-size:1.2rem;color:#7c5ca7;margin-bottom:1rem;">Carrito</h2>
+    <div id="cart-items"></div>
+    <div id="cart-total" style="font-weight:700;font-size:1.1rem;color:#4a4a4a;margin-top:1.2rem;"></div>
+    <button id="cart-whatsapp" style="margin-top:1.2rem;background:#25d366;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.2rem;font-size:1rem;font-weight:600;cursor:pointer;width:100%;">Consultar</button>
+  </div>
 
   <script>
     // URL pública de la hoja "precio_productos" (gid=4461674)
@@ -138,63 +469,442 @@
       return JSON.parse(jsonStr);
     }
 
+    let productosFiltroData = [];
+    let productosFiltroDataOriginal = [];
+    let productosData = [];
+
+    // --- Filtros dinámicos desde Google Sheets ---
+    async function cargarFiltros() {
+      // URL pública de la hoja 'productos' (gid=1048961426)
+      const filtrosUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=1048961426';
+      const filtrosDiv = document.getElementById('filters');
+      filtrosDiv.innerHTML = '';
+      try {
+        const res = await fetch(filtrosUrl);
+        const text = await res.text();
+        console.log('Respuesta Google Sheets:', text); // Log para depuración
+        const jsonStr = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
+        let data;
+        try {
+          data = JSON.parse(jsonStr);
+        } catch (parseErr) {
+          console.error('Error al parsear JSON:', parseErr, jsonStr);
+          filtrosDiv.innerHTML = '<div class="error">Error al parsear los datos de Google Sheets.<br>Revisa la estructura y publicación de la hoja.</div>';
+          return;
+        }
+        if (!data.table || !data.table.rows || !data.table.cols) {
+          filtrosDiv.innerHTML = '<div class="error">La estructura de la hoja no es válida.<br>Revisa los encabezados y el acceso público.</div>';
+          return;
+        }
+        const cols = data.table.cols.map(c => c.label.toLowerCase());
+        const rows = data.table.rows.map(r => r.c.map(c => c?.v || ''));
+        // Guardar todos los datos de la hoja productos para filtrar luego
+        productosFiltroData = rows.map(row => ({
+          id_producto: row[1], // columna B
+          producto: row[0],    // columna A
+          capacidad: row[4],   // columna E
+          alto: row[5],        // columna F
+          ancho: row[6]        // columna G
+        }));
+        productosFiltroDataOriginal = [...productosFiltroData];
+        // Mapear columnas correctas
+        // Producto: columna A (índice 0)
+        // Capacidad: columna E (índice 4, nombre 'capacidad_cc')
+        // Alto: columna F (índice 5, nombre 'alto')
+        // Ancho: columna G (índice 6, nombre 'ancho')
+        const campos = [
+          { key: 'producto', idx: 0, label: 'Producto' },
+          { key: 'capacidad', idx: 4, label: 'Capacidad (cm³)' },
+          { key: 'alto', idx: 5, label: 'Alto (cm)' },
+          { key: 'ancho', idx: 6, label: 'Ancho (cm)' }
+        ];
+        // Extraer valores únicos y válidos
+        const filtros = { producto: new Set(), capacidad: new Set(), alto: new Set(), ancho: new Set() };
+        rows.forEach(row => {
+          // Producto: texto
+          if (row[0]) filtros.producto.add(row[0]);
+          // Capacidad: numérico válido
+          if (typeof row[4] !== 'undefined' && row[4] !== null && !isNaN(row[4])) {
+            filtros.capacidad.add(Number(row[4]));
+          }
+          // Alto: numérico válido
+          if (typeof row[5] !== 'undefined' && row[5] !== null && !isNaN(row[5])) {
+            filtros.alto.add(Number(row[5]));
+          }
+          // Ancho: numérico válido
+          if (typeof row[6] !== 'undefined' && row[6] !== null && !isNaN(row[6])) {
+            filtros.ancho.add(Number(row[6]));
+          }
+        });
+        // Renderizar filtros con checkboxes y nombres correctos, ordenados
+        campos.forEach(campo => {
+          const group = document.createElement('div');
+          group.className = 'filter-group';
+          const label = document.createElement('label');
+          label.textContent = campo.label;
+          group.appendChild(label);
+          const optionsDiv = document.createElement('div');
+          optionsDiv.className = 'filter-options';
+          // Para capacidad, alto y ancho: mostrar en 5 columnas horizontales, manteniendo el orden
+          let values = [...filtros[campo.key]];
+          if (campo.key === 'producto') {
+            values.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+          } else {
+            values = values.filter(v => typeof v === 'number' && !isNaN(v));
+            values.sort((a, b) => a - b);
+            values = values.map(v => Number.isInteger(v) ? v.toString() : v.toFixed(1));
+          }
+          if (campo.key === 'capacidad' || campo.key === 'alto' || campo.key === 'ancho') {
+            const columns = 5;
+            const rowsCount = Math.ceil(values.length / columns);
+            for (let row = 0; row < rowsCount; row++) {
+              const rowDiv = document.createElement('div');
+              rowDiv.className = 'filter-row';
+              rowDiv.style.display = 'flex';
+              rowDiv.style.flexDirection = 'row'; // izquierda a derecha
+              rowDiv.style.gap = '0.5rem';
+              for (let col = 0; col < columns; col++) {
+                const idx = col + row * columns; // crecimiento izquierda a derecha y arriba a abajo
+                if (idx < values.length) {
+                  const v = values[idx];
+                  const option = document.createElement('label');
+                  option.className = 'filter-checkbox';
+                  option.style.color = '#111';
+                  option.style.display = 'flex';
+                  option.style.alignItems = 'center';
+                  const checkbox = document.createElement('input');
+                  checkbox.type = 'checkbox';
+                  checkbox.value = v;
+                  checkbox.name = campo.key;
+                  option.appendChild(checkbox);
+                  option.appendChild(document.createTextNode(v));
+                  rowDiv.appendChild(option);
+                }
+              }
+              optionsDiv.appendChild(rowDiv);
+            }
+          } else {
+            // Producto: todos en una sola columna
+            values.forEach(v => {
+              const option = document.createElement('label');
+              option.className = 'filter-checkbox';
+              option.style.color = '#111';
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.value = v;
+              checkbox.name = campo.key;
+              option.appendChild(checkbox);
+              option.appendChild(document.createTextNode(v));
+              optionsDiv.appendChild(option);
+            });
+          }
+          group.appendChild(optionsDiv);
+          filtrosDiv.appendChild(group);
+        });
+        // Si no hay ningún filtro, mostrar mensaje de depuración
+        if (!Object.values(filtros).some(set => set.size)) {
+          filtrosDiv.innerHTML = '<div style="color:#d32f2f;padding:1rem;">No hay datos para mostrar filtros.<br>Verifica la hoja de Google Sheets.</div>';
+        }
+      } catch (err) {
+        filtrosDiv.innerHTML = '<div class="error">No se pudieron cargar los filtros.</div>';
+      }
+    }
+    cargarFiltros();
+
+    // --- Filtro desplegable ---
+    const filterToggle = document.getElementById('filter-toggle');
+    const filterCard = document.getElementById('filter-card');
+    filterToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      filterCard.classList.toggle('open');
+      // Animar flecha del botón
+      filterToggle.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!filterCard.contains(e.target) && e.target !== filterToggle) {
+        filterCard.classList.remove('open');
+        filterToggle.classList.remove('open');
+      }
+    });
+
+    // --- Ordenar productos ---
+    let currentSort = 'desc';
+    function setSort(value) {
+      currentSort = value;
+      renderProductos();
+    }
+    document.querySelectorAll('.sort-option').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        setSort(this.dataset.value);
+        sortDropdown.classList.remove('open');
+        sortArrow.classList.remove('open');
+      });
+    });
+
+    // --- Desplegable de ordenar ---
+    const sortCard = document.getElementById('sort-card');
+    const sortArrow = document.getElementById('sort-arrow');
+    const sortDropdown = document.getElementById('sort-dropdown');
+    sortCard.addEventListener('click', function(e) {
+      e.stopPropagation();
+      sortDropdown.classList.toggle('open');
+      sortArrow.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!sortDropdown.contains(e.target) && e.target !== sortArrow && e.target !== sortCard) {
+        sortDropdown.classList.remove('open');
+        sortArrow.classList.remove('open');
+      }
+    });
+
+    // --- Filtrar productos ---
+    document.getElementById('filters').addEventListener('change', function() {
+      renderProductos();
+      renderSelectedFiltersBar();
+    });
+
+    function getSelectedFilters() {
+      const selected = {};
+      ['producto','capacidad','alto','ancho'].forEach(filtro => {
+        selected[filtro] = Array.from(document.querySelectorAll(`input[name='${filtro}']:checked`)).map(cb => cb.value);
+      });
+      return selected;
+    }
+
+    function renderSelectedFiltersBar() {
+      const bar = document.getElementById('selected-filters-bar');
+      const selected = getSelectedFilters();
+      bar.innerHTML = '';
+      let hasFilters = false;
+      const chips = [];
+      let totalChips = 0;
+      Object.entries(selected).forEach(([campo, valores]) => {
+        valores.forEach(val => {
+          hasFilters = true;
+          totalChips++;
+          const chip = document.createElement('span');
+          chip.className = 'selected-filter-chip';
+          chip.textContent = `${campo.charAt(0).toUpperCase() + campo.slice(1)}: ${val}`;
+          chips.push(chip);
+        });
+      });
+      // Ajustar tamaño de fuente y padding dinámicamente según cantidad de chips
+      let fontSize = '0.97rem';
+      let padding = '0.2rem 0.7rem';
+      if (totalChips > 5) { fontSize = '0.92rem'; padding = '0.15rem 0.5rem'; }
+      if (totalChips > 8) { fontSize = '0.85rem'; padding = '0.12rem 0.4rem'; }
+      if (totalChips > 12) { fontSize = '0.75rem'; padding = '0.08rem 0.3rem'; }
+      chips.forEach(chip => {
+        chip.style.fontSize = fontSize;
+        chip.style.padding = padding;
+        chip.style.marginRight = '0.2rem';
+        chip.style.maxWidth = '100%';
+        chip.style.whiteSpace = 'nowrap';
+        chip.style.overflow = 'hidden';
+        chip.style.textOverflow = 'ellipsis';
+      });
+      // --- ESTILOS PARA BARRA DE FILTROS SELECCIONADOS ---
+      bar.style.display = 'flex';
+      bar.style.flexWrap = 'wrap'; // Permite que los chips bajen a la siguiente línea
+      bar.style.overflowY = 'auto'; // Scroll vertical si hay muchos chips
+      bar.style.overflowX = 'hidden'; // Elimina scroll horizontal
+      bar.style.alignItems = 'flex-start';
+      bar.style.height = '70px'; // Altura fija, puedes ajustar este valor
+      bar.style.minHeight = '70px';
+      bar.style.maxHeight = '70px';
+      bar.style.padding = '0.5rem 1.2rem';
+      bar.style.boxSizing = 'border-box';
+      bar.style.width = '100%';
+      chips.forEach(chip => bar.appendChild(chip));
+      if (!hasFilters) {
+        bar.innerHTML = '<span style="color:#bbb;">Sin filtros seleccionados</span>';
+      }
+    }
+
+    function renderProductos() {
+      let productos = [...productosData];
+      // Filtrar por checkboxes usando productosFiltroDataOriginal y id_producto
+      const selected = getSelectedFilters();
+      let idsFiltrados = productosFiltroDataOriginal.map(p => p.id_producto);
+      Object.entries(selected).forEach(([campo, valores]) => {
+        if (valores.length) {
+          idsFiltrados = productosFiltroDataOriginal
+            .filter(p => valores.includes(String(p[campo])))
+            .map(p => p.id_producto);
+        }
+      });
+      if (Object.values(selected).some(arr => arr.length)) {
+        productos = productos.filter(p => idsFiltrados.includes(p.id_producto));
+      }
+      // Ordenar
+      const sort = currentSort;
+      productos.sort((a, b) => sort === 'asc' ? a.precio - b.precio : b.precio - a.precio);
+      // Renderizar
+      const gallery = document.getElementById('gallery');
+      if (!productos.length) {
+        gallery.innerHTML = '<div class="error">No se encontraron productos válidos.</div>';
+        return;
+      }
+      let html = '';
+      productos.forEach(p => {
+        // Mostrar precio refill si corresponde
+        let refillHtml = '';
+        if (p.refill === 'si' && p.precio_refill) {
+          refillHtml = `<div class="price" style="color:#7c5ca7;font-size:1rem;font-weight:500;margin-bottom:0.2rem;">Refill: $${p.precio_refill.toLocaleString('es-AR')}</div>`;
+        } else {
+          refillHtml = `<div class="price" style="visibility:hidden;">Refill</div>`;
+        }
+        html += `
+          <div class="product-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <img src="${p.imgUrl}" alt="${p.nombre}">
+            <div class="product-info" style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;">
+              <h3 style="font-size:1.1rem;margin-bottom:0.5rem;color:#4a4a4a;">${p.nombre}</h3>
+              <div class="price">$${p.precio.toLocaleString('es-AR')}</div>
+              ${refillHtml}
+            </div>
+            <button class="btn" style="margin-top:auto;" onclick="agregarAlPresupuesto('${p.nombre.replace(/'/g, '\'')}', ${p.precio})">Agregar</button>
+          </div>
+        `;
+      });
+      gallery.innerHTML = html;
+    }
+
+    // --- Cargar productos ---
     fetch(sheetUrl)
       .then(res => res.text())
       .then(data => {
         const parsed = parseGoogleSheetJSON(data);
         const rows = parsed.table.rows;
-
-        if (!rows || rows.length === 0) {
-          gallery.innerHTML = '<div class="error">No hay productos disponibles.</div>';
-          return;
-        }
-
-        let html = '';
-        rows.forEach(row => {
+        productosData = rows.map(row => {
           const celdas = row.c || [];
-          const imgUrl = celdas[2]?.v; // Columna C
-          const nombre = celdas[3]?.v; // Columna D
-          const precio = celdas[8]?.v; // Columna I
-
-          // ✅ Solo mostrar si hay nombre e imagen válidos
-          if (!nombre || !imgUrl) return;
-
-          const precioNum = parseFloat(precio);
-          const precioValido = !isNaN(precioNum) ? precioNum : 0;
-          const precioFormateado = `$${precioValido.toLocaleString('es-AR')}`;
-
-          // Escapar comillas simples en el nombre para JS
-          const nombreEscapado = nombre.replace(/'/g, "\\'");
-
-          html += `
-            <div class="product-card">
-              <img src="${imgUrl}" alt="${nombre}">
-              <div class="product-info">
-                <h3>${nombre}</h3>
-                <div class="price">${precioFormateado}</div>
-                <button class="btn" onclick="agregarAlPresupuesto('${nombreEscapado}', ${precioValido})">Agregar</button>
-              </div>
-            </div>
-          `;
-        });
-
-        if (html === '') {
-          gallery.innerHTML = '<div class="error">No se encontraron productos válidos.</div>';
-        } else {
-          gallery.innerHTML = html;
-        }
+          return {
+            id_producto: celdas[1]?.v, // columna B en precio_productos
+            imgUrl: celdas[2]?.v,
+            nombre: celdas[3]?.v,
+            precio: parseFloat(celdas[8]?.v) || 0,
+            producto: celdas[3]?.v,
+            capacidad: celdas[4]?.v,
+            alto: celdas[5]?.v,
+            ancho: celdas[6]?.v,
+            refill: celdas[11]?.v?.toString().toLowerCase() || '', // columna L
+            precio_refill: parseFloat(celdas[12]?.v) || null // columna M
+          };
+        }).filter(p => p.nombre && p.imgUrl);
+        renderProductos();
       })
       .catch(err => {
-        console.error('Error al cargar productos:', err);
-        gallery.innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
+        document.getElementById('gallery').innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
       });
 
-    function agregarAlPresupuesto(nombre, precio) {
-      // Guardar en localStorage para usar en presupuesto.html
-      const producto = { nombre, precio };
-      localStorage.setItem('productoSeleccionado', JSON.stringify(producto));
-      window.location.href = 'presupuesto.html';
+    let cart = [];
+    function addToCart(nombre, precio) {
+      const idx = cart.findIndex(item => item.nombre === nombre);
+      if (idx > -1) {
+        cart[idx].cantidad += 1;
+      } else {
+        cart.push({ nombre, precio, cantidad: 1, soloRefill: false });
+      }
+      updateCartFab();
     }
+    function updateCartFab() {
+      document.getElementById('cart-count').textContent = cart.reduce((acc, item) => acc + item.cantidad, 0);
+    }
+    function renderCartModal() {
+      const modal = document.getElementById('cart-modal');
+      const itemsDiv = document.getElementById('cart-items');
+      itemsDiv.innerHTML = '';
+      if (!cart.length) {
+        itemsDiv.innerHTML = '<div style="color:#bbb;text-align:center;">No hay productos en el carrito.</div>';
+        document.getElementById('cart-total').textContent = '';
+        return;
+      }
+      // Encabezado de columnas
+      const header = document.createElement('div');
+      header.style.display = 'grid';
+      header.style.gridTemplateColumns = '1fr 80px 90px';
+      header.style.fontWeight = '700';
+      header.style.color = '#7c5ca7';
+      header.style.marginBottom = '0.7rem';
+      header.innerHTML = `<span>Producto</span><span style='text-align:right;'>Precio</span><span style='text-align:center;'>Solo refill</span>`;
+      itemsDiv.appendChild(header);
+      let total = 0;
+      cart.forEach((item, idx) => {
+        // Buscar si el producto tiene refill y el precio de refill
+        const productoInfo = productosData.find(p => p.nombre === item.nombre);
+        const tieneRefill = productoInfo && productoInfo.refill === 'si' && productoInfo.precio_refill;
+        let precioMostrar = item.precio;
+        if (item.soloRefill && tieneRefill) {
+          precioMostrar = productoInfo.precio_refill;
+        }
+        total += precioMostrar * item.cantidad;
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '1fr 80px 90px';
+        row.style.alignItems = 'center';
+        row.style.gap = '0.5rem';
+        row.style.marginBottom = '0.5rem';
+        row.innerHTML = `<span style='color:#4a4a4a;font-size:1rem;'>${item.nombre}${item.cantidad > 1 ? ' x'+item.cantidad : ''}</span><span style='color:#7c5ca7;font-weight:600;font-size:1rem;text-align:right;'>$${(precioMostrar * item.cantidad).toLocaleString('es-AR')}</span><input type='checkbox' id='refill-check-${idx}' ${item.soloRefill ? 'checked' : ''} ${tieneRefill ? '' : 'disabled'} style='margin:auto;display:block;width:20px;height:20px;'>`;
+        itemsDiv.appendChild(row);
+        // Guardar el estado del check
+        const check = row.querySelector(`#refill-check-${idx}`);
+        check.addEventListener('change', function() {
+          item.soloRefill = this.checked;
+          renderCartModal(); // Actualizar precios y total al cambiar
+        });
+      });
+      document.getElementById('cart-total').textContent = `Total: $${total.toLocaleString('es-AR')}`;
+    }
+    document.getElementById('cart-fab').onclick = function() {
+      const modal = document.getElementById('cart-modal');
+      modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+      renderCartModal();
+    };
+    document.getElementById('cart-whatsapp').onclick = function() {
+      if (!cart.length) return;
+      let msg = '¡Hola! Quiero consultar este pedido:\n';
+      cart.forEach(item => {
+        const productoInfo = productosData.find(p => p.nombre === item.nombre);
+        const tieneRefill = productoInfo && productoInfo.refill === 'si' && productoInfo.precio_refill;
+        let precioMostrar = item.precio;
+        let refillTxt = '';
+        if (item.soloRefill && tieneRefill) {
+          precioMostrar = productoInfo.precio_refill;
+          refillTxt = ' (solo refill)';
+        }
+        msg += `- ${item.nombre}${refillTxt}${item.cantidad > 1 ? ' x'+item.cantidad : ''}: $${(precioMostrar * item.cantidad).toLocaleString('es-AR')}\n`;
+      });
+      const total = cart.reduce((acc, item) => {
+        const productoInfo = productosData.find(p => p.nombre === item.nombre);
+        const tieneRefill = productoInfo && productoInfo.refill === 'si' && productoInfo.precio_refill;
+        let precioMostrar = item.precio;
+        if (item.soloRefill && tieneRefill) {
+          precioMostrar = productoInfo.precio_refill;
+        }
+        return acc + precioMostrar * item.cantidad;
+      }, 0);
+      msg += `Total: $${total.toLocaleString('es-AR')}`;
+      const telefono = '541126481446'; // Reemplaza por el número real
+      const url = `https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    };
+    // Reemplazar el botón agregar para usar el carrito
+    function agregarAlPresupuesto(nombre, precio) {
+      addToCart(nombre, precio);
+      updateCartFab();
+      document.getElementById('cart-modal').style.display = 'block';
+      renderCartModal();
+    }
+
+    // Inicializar barra de filtros seleccionados al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+      renderSelectedFiltersBar();
+      document.getElementById('clear-filters-btn').onclick = function() {
+        document.querySelectorAll('#filters input[type="checkbox"]').forEach(cb => cb.checked = false);
+        renderProductos();
+        renderSelectedFiltersBar();
+      };
+    });
   </script>
 </body>
 </html>

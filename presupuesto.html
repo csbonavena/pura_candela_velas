@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Presupuesto - Pura Candela</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .presupuesto-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .presupuesto-table th, .presupuesto-table td {
+      padding: 0.7rem 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      font-size: 1rem;
+    }
+    .presupuesto-table th {
+      background: #f3eafd;
+      color: #7c5ca7;
+      font-weight: 600;
+    }
+    .presupuesto-table td img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .presupuesto-form {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      padding: 2rem;
+      max-width: 500px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .presupuesto-form label {
+      font-weight: 500;
+      color: #7c5ca7;
+      margin-bottom: 0.3rem;
+    }
+    .presupuesto-form input {
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #b8a7c9;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .presupuesto-btns {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .btn-presupuesto {
+      background: #b8a7c9;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+    .btn-presupuesto:hover {
+      background: #7c5ca7;
+    }
+    @media (max-width: 700px) {
+      .presupuesto-table th, .presupuesto-table td {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.2rem;
+      }
+      .presupuesto-form {
+        padding: 1rem;
+      }
+    }
+    @media (max-width: 900px) {
+      .container.header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .logo-card {
+        margin-bottom: 0.5rem;
+      }
+      .nav-menu {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+        justify-content: stretch;
+      }
+      .nav-btn {
+        width: 100%;
+        text-align: center;
+        font-size: 1rem;
+        padding: 0.7rem 0.2rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .container.header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .nav-menu {
+        grid-template-columns: 1fr 1fr;
+      }
+      .nav-btn {
+        font-size: 0.95rem;
+        padding: 0.6rem 0.1rem;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="productos-page">
+  <header class="header">
+    <div class="container header-content" style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="logo-card" style="margin-right:2rem;">
+        <a href="index.html" class="logo">
+          <img src="img/logo.png" alt="Logo de Pura Candela" />
+        </a>
+      </div>
+      <nav class="nav-menu" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;align-items:center;">
+        <a href="productos.html" class="nav-btn">Productos</a>
+        <a href="presupuesto.html" class="nav-btn">Presupuesto</a>
+        <a href="nuevoproducto.html" class="nav-btn">Producto nuevo</a>
+        <a href="nuevoinsumo.html" class="nav-btn">Insumos</a>
+        <a href="margenes.html" class="nav-btn">Márgenes</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <h1>Presupuesto</h1>
+    <div class="loading" id="presupuesto-loading">Cargando productos...</div>
+    <table class="presupuesto-table" id="presupuesto-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Descripción</th>
+          <th>Precio base</th>
+          <th>Cantidad</th>
+          <th>Precio base total</th>
+          <th>% Ganancia</th>
+          <th>Precio venta</th>
+        </tr>
+      </thead>
+      <tbody id="presupuesto-tbody"></tbody>
+    </table>
+    <form class="presupuesto-form" id="presupuesto-form">
+      <label>Nombre:<input type="text" id="nombre" required></label>
+      <label>Apellido:<input type="text" id="apellido" required></label>
+      <label>Teléfono (WhatsApp):<input type="tel" id="telefono" pattern="[0-9]+" required></label>
+      <label>Fecha de entrega:<input type="date" id="fecha_entrega" required></label>
+    </form>
+    <div class="presupuesto-btns">
+      <button class="btn-presupuesto" id="btn-ver">Ver presupuesto</button>
+      <button class="btn-presupuesto" id="btn-whatsapp">Enviar por WhatsApp</button>
+    </div>
+    <div id="presupuesto-preview" style="margin:2rem auto;max-width:700px;"></div>
+  </main>
+  <script>
+    // Cargar productos desde Google Sheets
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
+    function parseGoogleSheetJSON(text) {
+      const jsonStr = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
+      return JSON.parse(jsonStr);
+    }
+    let productos = [];
+    fetch(sheetUrl)
+      .then(res => res.text())
+      .then(data => {
+        const parsed = parseGoogleSheetJSON(data);
+        const rows = parsed.table.rows;
+        productos = rows.map(row => {
+          const c = row.c || [];
+          return {
+            img: c[2]?.v,
+            descripcion: c[3]?.v,
+            precio_base: parseFloat(c[6]?.v) || 0,
+            nombre: c[3]?.v
+          };
+        }).filter(p => p.img && p.descripcion);
+        renderPresupuestoTable();
+      })
+      .catch(() => {
+        document.getElementById('presupuesto-loading').textContent = 'No se pudieron cargar los productos.';
+      });
+    function renderPresupuestoTable() {
+      document.getElementById('presupuesto-loading').style.display = 'none';
+      const table = document.getElementById('presupuesto-table');
+      const tbody = document.getElementById('presupuesto-tbody');
+      table.style.display = 'table';
+      tbody.innerHTML = '';
+      productos.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><img src="${p.img}" alt="${p.descripcion}"></td>
+          <td>${p.descripcion}</td>
+          <td>$<span id="precio-base-${idx}">${p.precio_base.toLocaleString('es-AR')}</span></td>
+          <td><input type="number" min="0" value="0" style="width:60px;" id="cantidad-${idx}"></td>
+          <td>$<span id="precio-total-${idx}">0</span></td>
+          <td><input type="number" min="0" max="100" value="0" style="width:60px;" id="ganancia-${idx}"></td>
+          <td>$<span id="precio-venta-${idx}">0</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      // Listeners para actualizar totales
+      productos.forEach((p, idx) => {
+        const cantidadInput = document.getElementById(`cantidad-${idx}`);
+        const gananciaInput = document.getElementById(`ganancia-${idx}`);
+        function updateRow() {
+          const cantidad = parseInt(cantidadInput.value) || 0;
+          const precioBase = p.precio_base;
+          const precioTotal = cantidad * precioBase;
+          document.getElementById(`precio-total-${idx}`).textContent = precioTotal.toLocaleString('es-AR');
+          const ganancia = parseFloat(gananciaInput.value) || 0;
+          const precioVenta = precioTotal + (precioTotal * ganancia / 100);
+          document.getElementById(`precio-venta-${idx}`).textContent = precioVenta.toLocaleString('es-AR');
+        }
+        cantidadInput.addEventListener('input', updateRow);
+        gananciaInput.addEventListener('input', updateRow);
+      });
+    }
+    // Generar presupuesto en línea
+    document.getElementById('btn-ver').onclick = function() {
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const telefono = document.getElementById('telefono').value;
+      const fecha = document.getElementById('fecha_entrega').value;
+      let html = `<h2>Presupuesto</h2><p><b>Cliente:</b> ${nombre} ${apellido}<br><b>Teléfono:</b> ${telefono}<br><b>Fecha de entrega:</b> ${fecha}</p>`;
+      html += `<table style='width:100%;border-collapse:collapse;background:#fff;border-radius:12px;box-shadow:0 2px 10px #eee;'>`;
+      html += `<tr style='background:#f3eafd;color:#7c5ca7;font-weight:600;'><th>Producto</th><th>Cantidad</th><th>Precio base total</th><th>% Ganancia</th><th>Precio venta</th></tr>`;
+      let hayProductos = false;
+      productos.forEach((p, idx) => {
+        const cantidad = parseInt(document.getElementById(`cantidad-${idx}`).value) || 0;
+        if (cantidad > 0) {
+          hayProductos = true;
+          const precioBase = p.precio_base;
+          const precioTotal = cantidad * precioBase;
+          const ganancia = parseFloat(document.getElementById(`ganancia-${idx}`).value) || 0;
+          const precioVenta = precioTotal + (precioTotal * ganancia / 100);
+          html += `<tr><td>${p.descripcion}</td><td>${cantidad}</td><td>$${precioTotal.toLocaleString('es-AR')}</td><td>${ganancia}%</td><td>$${precioVenta.toLocaleString('es-AR')}</td></tr>`;
+        }
+      });
+      html += `</table>`;
+      if (!hayProductos) {
+        html += `<div style='color:#d32f2f;padding:1rem;'>No hay productos seleccionados para el presupuesto.</div>`;
+      }
+      document.getElementById('presupuesto-preview').innerHTML = html;
+    };
+    // Enviar por WhatsApp
+    document.getElementById('btn-whatsapp').onclick = function() {
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const telefono = document.getElementById('telefono').value;
+      const fecha = document.getElementById('fecha_entrega').value;
+      let msg = `Presupuesto para ${nombre} ${apellido}\nTeléfono: ${telefono}\nFecha de entrega: ${fecha}\n`;
+      let hayProductos = false;
+      productos.forEach((p, idx) => {
+        const cantidad = parseInt(document.getElementById(`cantidad-${idx}`).value) || 0;
+        if (cantidad > 0) {
+          hayProductos = true;
+          const precioBase = p.precio_base;
+          const precioTotal = cantidad * precioBase;
+          const ganancia = parseFloat(document.getElementById(`ganancia-${idx}`).value) || 0;
+          const precioVenta = precioTotal + (precioTotal * ganancia / 100);
+          msg += `- ${p.descripcion}: ${cantidad}u, Venta: $${precioVenta.toLocaleString('es-AR')}\n`;
+        }
+      });
+      if (!hayProductos) {
+        alert('No hay productos seleccionados para enviar el presupuesto.');
+        return;
+      }
+      // Generar PDF usando jsPDF y enviar por WhatsApp
+      const doc = new window.jspdf.jsPDF();
+      doc.setFontSize(16);
+      doc.text(`Presupuesto para ${nombre} ${apellido}`, 10, 20);
+      doc.setFontSize(12);
+      doc.text(`Teléfono: ${telefono}`, 10, 30);
+      doc.text(`Fecha de entrega: ${fecha}`, 10, 40);
+      let y = 50;
+      doc.text('Productos:', 10, y);
+      y += 10;
+      productos.forEach((p, idx) => {
+        const cantidad = parseInt(document.getElementById(`cantidad-${idx}`).value) || 0;
+        if (cantidad > 0) {
+          const precioBase = p.precio_base;
+          const precioTotal = cantidad * precioBase;
+          const ganancia = parseFloat(document.getElementById(`ganancia-${idx}`).value) || 0;
+          const precioVenta = precioTotal + (precioTotal * ganancia / 100);
+          doc.text(`- ${p.descripcion}: ${cantidad}u, Venta: $${precioVenta.toLocaleString('es-AR')}`, 10, y);
+          y += 10;
+        }
+      });
+      doc.save('presupuesto.pdf');
+      alert('El PDF del presupuesto se ha descargado. Puedes adjuntarlo manualmente en WhatsApp.');
+      // WhatsApp solo permite enviar archivos adjuntos desde la app, no desde web. Se informa al usuario.
+      const url = `https://wa.me/${telefono}?text=${encodeURIComponent('Te envío el presupuesto adjunto en PDF.')}`;
+      window.open(url, '_blank');
+    };
+  </script>
+</body>
+</html>
