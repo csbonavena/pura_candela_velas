@@ -4,7 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Presupuesto - Pura Candela</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Pura Candela: velas de soja, aromas naturales y productos hechos a mano con amor. Descubrí nuestros difusores, home sprays y más." />
+  <meta name="keywords" content="velas de soja, aromas, difusores, perfuminas, Pura Candela, regalos artesanales" />
+  <meta name="author" content="Pura Candela" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/logo.png" type="image/png" />
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Tipografía moderna y elegante -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <!-- Estilos internos específicos del presupuesto -->
   <style>
     .presupuesto-table {
       width: 100%;
@@ -81,45 +99,6 @@
     .btn-presupuesto:hover {
       background: #7c5ca7;
     }
-    .container.header-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 1rem;
-      height: 80px;
-    }
-    .logo-card img {
-      height: 54px;
-      object-fit: contain;
-      display: block;
-    }
-    .nav-menu {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.5rem;
-      align-items: center;
-    }
-    .nav-btn {
-      background: none;
-      border: none;
-      color: #7c5ca7;
-      font-size: 1.08rem;
-      font-weight: 600;
-      padding: 0.7rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s;
-      text-align: center;
-      text-decoration: none;
-      display: block;
-    }
-    .nav-btn:hover, .nav-btn.active {
-      background: #f3eafd;
-      color: #b8a7c9;
-    }
     @media (max-width: 900px) {
       .container.header-content {
         flex-direction: column;
@@ -146,13 +125,6 @@
       }
     }
     @media (max-width: 600px) {
-      .container.header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-        height: auto;
-        padding: 0.5rem;
-      }
       .nav-menu {
         grid-template-columns: 1fr 1fr;
       }
@@ -165,9 +137,24 @@
       }
     }
   </style>
+
+  <!-- Librería PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body class="productos-page">
+
+<body>
+  <!-- FONDO ANIMADO -->
+  <div class="animated-bg">
+    <svg width="100vw" height="100vh" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;">
+      <circle class="bg-c1" cx="400" cy="300" r="320" fill="#ffd6e0" fill-opacity="0.7"/>
+      <circle class="bg-c2" cx="1500" cy="250" r="260" fill="#d0f4de" fill-opacity="0.7"/>
+      <circle class="bg-c3" cx="900" cy="900" r="340" fill="#e2d9f3" fill-opacity="0.7"/>
+      <circle class="bg-c4" cx="1700" cy="800" r="220" fill="#fff3b2" fill-opacity="0.7"/>
+      <circle class="bg-c5" cx="200" cy="900" r="260" fill="#d4f1f9" fill-opacity="0.7"/>
+    </svg>
+  </div>
+
+  <!-- HEADER -->
   <header class="header">
     <div class="container header-content">
       <div class="logo-card">
@@ -177,85 +164,100 @@
       </div>
       <nav class="nav-menu">
         <a href="productos.html" class="nav-btn">Productos</a>
-        <a href="presupuesto.html" class="nav-btn">Presupuesto</a>
+        <a href="presupuesto.html" class="nav-btn active">Presupuesto</a>
         <a href="nuevoproducto.html" class="nav-btn">Producto nuevo</a>
         <a href="nuevoinsumo.html" class="nav-btn">Insumos</a>
         <a href="margenes.html" class="nav-btn">Márgenes</a>
       </nav>
     </div>
   </header>
+    <!-- DIVISOR -->
+  <hr class="divider" />
+ <!-- CONTENIDO PRINCIPAL -->
   <main>
-    <h1 style="margin-bottom:2.2rem;">Presupuesto</h1>
+    <span style="display:inline-block; width:50px;"></span>
     <div id="paso-1" style="margin-bottom:2rem;">
-      <h2 style="font-size:1.3rem;color:#7c5ca7;margin-bottom:1.2rem;">1. Selecciona los productos</h2>
-      <div style="height:18px;"></div>
-      <table class="presupuesto-table" id="tabla-productos" style="margin-top:0.5rem;">
-        <thead>
-          <tr>
-            <th>Imagen</th>
-            <th>Descripción</th>
-            <th>Costo total</th>
-            <th>Seleccionar</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-productos"></tbody>
-      </table>
-      <div style="display:flex;gap:1rem;margin-top:2rem;">
-        <button id="btn-siguiente" class="btn-presupuesto">Siguiente</button>
+      <div style="overflow-x:auto; max-width:900px; margin:0 auto;">
+        <h1 style="margin: 0 0 1.2rem 0;">Presupuesto</h1>
+        <h2 style="font-size:1.3rem; color:#7c5ca7; margin:0 0 1.2rem 0;">1. Selecciona los productos</h2>
+        <table class="presupuesto-table" id="items-table" style="width:100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="width:150px;">Imagen</th>
+              <th>Descripción</th>
+              <th>Costo total</th>
+              <th>Seleccionar</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-items"></tbody>
+        </table>
+        <div style="display:flex; gap:1rem; margin-top:2rem;">
+          <button id="btn-next" class="btn-presupuesto">Siguiente</button>
+        </div>
       </div>
     </div>
     <div id="paso-2" style="display:none;margin-bottom:2rem;">
-      <h2 style="font-size:1.3rem;color:#7c5ca7;margin-bottom:1rem;">2. Completa cantidades y ganancia</h2>
-      <table class="presupuesto-table" id="tabla-seleccionados">
-        <thead>
-          <tr>
-            <th>Imagen</th>
-            <th>Descripción</th>
-            <th>Costo total</th>
-            <th>Cantidad</th>
-            <th>% Ganancia</th>
-            <th>Precio venta</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-seleccionados"></tbody>
-      </table>
-      <div style="display:flex;gap:1rem;margin-top:2rem;">
-        <button id="btn-atras-1" class="btn-presupuesto" style="background:#eee;color:#7c5ca7;">Atrás</button>
-        <button id="btn-siguiente-2" class="btn-presupuesto">Siguiente</button>
+      <div style="overflow-x:auto; max-width:900px; margin:0 auto;">
+        <h2 style="font-size:1.3rem; color:#7c5ca7; margin:0 0 1.2rem 0;">2. Completa cantidades y ganancia</h2>
+        <table class="presupuesto-table" id="tabla-seleccionados" style="width:100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="width:150px;">Imagen</th>
+              <th>Descripción</th>
+              <th>Costo total</th>
+              <th>Cantidad</th>
+              <th>% Ganancia</th>
+              <th>Precio venta</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-seleccionados"></tbody>
+        </table>
+        <div style="display:flex; gap:1rem; margin-top:2rem;">
+          <button id="btn-atras-1" class="btn-presupuesto" style="background:#eee;color:#7c5ca7;">Atrás</button>
+          <button id="btn-siguiente-2" class="btn-presupuesto">Siguiente</button>
+        </div>
       </div>
     </div>
     <div id="paso-3" style="display:none;">
-      <h2 style="font-size:1.3rem;color:#7c5ca7;margin-bottom:1.2rem;">Presupuesto</h2>
-      <div style="height:18px;"></div>
-      <form class="presupuesto-form" id="presupuesto-form">
-        <label>Cliente:<input type="text" id="nombre" required style="margin-bottom:0.7rem;"></label>
-        <label>Apellido:<input type="text" id="apellido" required style="margin-bottom:0.7rem;"></label>
-        <label>Teléfono (WhatsApp):<input type="tel" id="telefono" pattern="[0-9]+" required style="margin-bottom:0.7rem;"></label>
-        <label>Fecha de entrega:<input type="date" id="fecha_entrega" required style="margin-bottom:0.7rem;"></label>
-      </form>
-      <div style="height:18px;"></div>
-      <div class="presupuesto-btns">
-        <button id="btn-atras-2" class="btn-presupuesto" style="background:#eee;color:#7c5ca7;">Atrás</button>
-        <button class="btn-presupuesto" id="btn-ver">Ver presupuesto</button>
-        <button class="btn-presupuesto" id="btn-whatsapp">Enviar por WhatsApp</button>
+      <div style="overflow-x:auto; max-width:900px; margin:0 auto;">
+        <h2 style="font-size:1.3rem; color:#7c5ca7; margin:0 0 1.2rem 0;">Presupuesto</h2>
+        <form class="presupuesto-form" id="presupuesto-form">
+          <label>Cliente:<input type="text" id="nombre" required style="margin-bottom:0.7rem;"></label>
+          <label>Apellido:<input type="text" id="apellido" required style="margin-bottom:0.7rem;"></label>
+          <label>Teléfono (WhatsApp):<input type="tel" id="telefono" pattern="[0-9]+" required style="margin-bottom:0.7rem;"></label>
+          <label>Fecha de entrega:<input type="date" id="fecha_entrega" required style="margin-bottom:0.7rem;"></label>
+        </form>
+        <div style="height:18px;"></div>
+        <div class="presupuesto-btns">
+          <button id="btn-atras-2" class="btn-presupuesto" style="background:#eee;color:#7c5ca7;">Atrás</button>
+          <button class="btn-presupuesto" id="btn-ver">Ver presupuesto</button>
+          <button class="btn-presupuesto" id="btn-whatsapp">Enviar por WhatsApp</button>
+        </div>
+        <div id="presupuesto-preview" style="margin:2rem auto;max-width:700px;"></div>
+      </div>
+    </div>
       </div>
       <div id="presupuesto-preview" style="margin:2rem auto;max-width:700px;"></div>
     </div>
   </main>
+
+  <!-- SCRIPT FUNCIONAL -->
   <script>
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
     function parseGoogleSheetJSON(text) {
-      const jsonStr = text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
+      const jsonStr = text.replace('/*O_o*/\\ngoogle.visualization.Query.setResponse(', '').replace(');', '');
       return JSON.parse(jsonStr);
     }
-    let productos = [];
+
+    let items = [];
     let seleccionados = [];
+
     fetch(sheetUrl)
       .then(res => res.text())
       .then(data => {
         const parsed = parseGoogleSheetJSON(data);
         const rows = parsed.table.rows;
-        productos = rows.map(row => {
+        items = rows.map(row => {
           const c = row.c || [];
           return {
             img: c[2]?.v,
@@ -267,12 +269,14 @@
         renderPaso1();
       })
       .catch(() => {
-        document.getElementById('productos-lista').innerHTML = '<div class="error">No se pudieron cargar los productos.</div>';
+        const paso1 = document.getElementById('paso-1');
+        paso1.innerHTML += '<div class="error">No se pudieron cargar los ítems.</div>';
       });
+
     function renderPaso1() {
-      const tbody = document.getElementById('tbody-productos');
+      const tbody = document.getElementById('tbody-items');
       tbody.innerHTML = '';
-      productos.forEach((p, idx) => {
+      items.forEach((p, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><img src="${p.img}" alt="${p.descripcion}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;"></td>
@@ -291,17 +295,20 @@
         };
       });
     }
-    document.getElementById('btn-siguiente').onclick = function() {
+
+    document.getElementById('btn-next').onclick = function() {
       if (!seleccionados.length) {
-        alert('Selecciona al menos un producto para continuar.');
+        alert('Selecciona al menos un ítem para continuar.');
         return;
       }
       document.getElementById('paso-1').style.display = 'none';
       document.getElementById('paso-2').style.display = 'block';
       renderPaso2();
     };
+
+    // Paso 2: edición de cantidades y ganancia
     function renderPaso2() {
-      const tbody = document.getElementById('tbody-seleccionados');
+      const tbody = document.getElementById('tabla-seleccionados').querySelector('tbody');
       tbody.innerHTML = '';
       seleccionados.forEach((p, idx) => {
         const tr = document.createElement('tr');
@@ -314,7 +321,6 @@
           <td>$<span id="precio-venta-sel-${idx}">${(p.cantidad*p.costo_total*(1+p.ganancia/100)).toLocaleString('es-AR')}</span></td>
         `;
         tbody.appendChild(tr);
-        // Listeners para actualizar cantidad y ganancia
         document.getElementById(`cantidad-sel-${idx}`).oninput = function() {
           seleccionados[idx].cantidad = parseInt(this.value) || 1;
           updatePrecioVenta(idx);
@@ -325,11 +331,13 @@
         };
       });
     }
+
     function updatePrecioVenta(idx) {
       const p = seleccionados[idx];
       const precioVenta = p.cantidad * p.costo_total * (1 + p.ganancia / 100);
       document.getElementById(`precio-venta-sel-${idx}`).textContent = precioVenta.toLocaleString('es-AR');
     }
+
     document.getElementById('btn-siguiente-2').onclick = function() {
       document.getElementById('paso-2').style.display = 'none';
       document.getElementById('paso-3').style.display = 'block';
@@ -342,7 +350,7 @@
       document.getElementById('paso-3').style.display = 'none';
       document.getElementById('paso-2').style.display = 'block';
     };
-    // Generar presupuesto en línea
+
     document.getElementById('btn-ver').onclick = function() {
       const nombre = document.getElementById('nombre').value;
       const apellido = document.getElementById('apellido').value;
@@ -366,27 +374,12 @@
       }
       document.getElementById('presupuesto-preview').innerHTML = html;
     };
-    // Enviar por WhatsApp
+
     document.getElementById('btn-whatsapp').onclick = function() {
       const nombre = document.getElementById('nombre').value;
       const apellido = document.getElementById('apellido').value;
       const telefono = document.getElementById('telefono').value;
       const fecha = document.getElementById('fecha_entrega').value;
-      let msg = `Presupuesto para ${nombre} ${apellido}\nTeléfono: ${telefono}\nFecha de entrega: ${fecha}\n`;
-      let hayProductos = false;
-      seleccionados.forEach((p) => {
-        if (p.cantidad > 0) {
-          hayProductos = true;
-          const precioTotal = p.cantidad * p.costo_total;
-          const precioVenta = precioTotal + (precioTotal * p.ganancia / 100);
-          msg += `- ${p.descripcion}: ${p.cantidad}u, Venta: $${precioVenta.toLocaleString('es-AR')}\n`;
-        }
-      });
-      if (!hayProductos) {
-        alert('No hay productos seleccionados para enviar el presupuesto.');
-        return;
-      }
-      // Generar PDF usando jsPDF y enviar por WhatsApp
       const doc = new window.jspdf.jsPDF();
       doc.setFontSize(16);
       doc.text(`Presupuesto para ${nombre} ${apellido}`, 10, 20);
@@ -394,8 +387,6 @@
       doc.text(`Teléfono: ${telefono}`, 10, 30);
       doc.text(`Fecha de entrega: ${fecha}`, 10, 40);
       let y = 50;
-      doc.text('Productos:', 10, y);
-      y += 10;
       seleccionados.forEach((p) => {
         if (p.cantidad > 0) {
           const precioTotal = p.cantidad * p.costo_total;
@@ -406,10 +397,15 @@
       });
       doc.save('presupuesto.pdf');
       alert('El PDF del presupuesto se ha descargado. Puedes adjuntarlo manualmente en WhatsApp.');
-      // WhatsApp solo permite enviar archivos adjuntos desde la app, no desde web. Se informa al usuario.
       const url = `https://wa.me/${telefono}?text=${encodeURIComponent('Te envío el presupuesto adjunto en PDF.')}`;
       window.open(url, '_blank');
     };
   </script>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 Pura Candela — Hecho con amor en Argentina 💛</p>
+  </footer>
+
 </body>
 </html>

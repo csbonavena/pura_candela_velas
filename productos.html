@@ -420,7 +420,6 @@
       </nav>
     </div>
   </header>
-
   <main>
     <div class="top-bar-wrapper">
       <div class="filter-toggle" id="filter-toggle"><span>Filtros</span></div>
@@ -445,7 +444,6 @@
       <div class="loading">Cargando productos...</div>
     </div>
   </main>
-
   <!-- Carrito flotante -->
   <div id="cart-fab" style="position:fixed;bottom:32px;right:32px;z-index:1000;width:58px;height:58px;background:#b8a7c9;border-radius:50%;box-shadow:0 4px 16px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#b8a7c9"/><path d="M7 18c-1.104 0-2-.896-2-2s.896-2 2-2h10c1.104 0 2 .896 2 2s-.896 2-2 2H7zm0-2h10v-8H7v8zm2-6h6v6H9v-6z" fill="#fff"/></svg>
@@ -457,7 +455,6 @@
     <div id="cart-total" style="font-weight:700;font-size:1.1rem;color:#4a4a4a;margin-top:1.2rem;"></div>
     <button id="cart-whatsapp" style="margin-top:1.2rem;background:#25d366;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.2rem;font-size:1rem;font-weight:600;cursor:pointer;width:100%;">Consultar</button>
   </div>
-
   <script>
     // URL pública de la hoja "precio_productos" (gid=4461674)
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1NhW3np9I77O9ks5b3XdZElGtkBzQnEvu4_9QIz7epsc/gviz/tq?tqx=out:json&gid=4461674';
@@ -472,7 +469,6 @@
     let productosFiltroData = [];
     let productosFiltroDataOriginal = [];
     let productosData = [];
-
     // --- Filtros dinámicos desde Google Sheets ---
     async function cargarFiltros() {
       // URL pública de la hoja 'productos' (gid=1048961426)
@@ -906,5 +902,10 @@
       };
     });
   </script>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 Pura Candela — Hecho con amor en Argentina 💛</p>
+  </footer>
+
 </body>
 </html>
